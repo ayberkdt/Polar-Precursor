@@ -55,7 +55,7 @@ class Family(str, Enum):
 
 
 _PREFIX: dict[Family, tuple[str, ...]] = {
-    Family.LOW: ("low_lag",),
+    Family.LOW: ("low_",),  # low_lag*, low_same_lag*, low_other_lag*
     Family.POLAR: ("polar_north_lag", "polar_south_lag"),
     Family.MID: ("mid_same",),
     Family.DRIVERS: ("drv_",),

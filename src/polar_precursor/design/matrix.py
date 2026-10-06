@@ -21,7 +21,7 @@ from space_environment.analysis.index_features import geometry_features
 DriverFunction = Callable[[pd.Timestamp], Mapping[str, float]]
 
 #: Bump when the columns or their meaning change; part of the dataset cache key.
-DESIGN_VERSION = 2
+DESIGN_VERSION = 2  # 2: sector-aware low lags added (ladder prefix fix changed no column)
 
 #: Storm classes from the weakest up (space_environment.physics.storm_intensity).
 INTENSITY_ORDER: tuple[str, ...] = ("weak", "moderate", "strong", "severe", "extreme")

@@ -21,8 +21,10 @@ paketini tutar.
 - Gerçek veri hattı uçtan uca çalışıyor: CDF → QD → sakin NRLMSIS referansı →
   parçalar → örnekler → fırtına tablosu → tasarım matrisi ve koşu kaydı, 29 Ekim
   2003 gününde ölçüldü (`plans/kanit/uctan_uca_2003_10_29_cikti.txt`).
-- Henüz yok: 2001-2015 tam veri koşusu, gerçek veride pilot, ön kayıt belgesi,
-  tez metni. Durum ve kararlar: [`plans/00_genel_bakis.md`](plans/00_genel_bakis.md).
+- Pilot koşuldu (CHAMP 2001-2005, 30 fırtına kümesi, 20 525 örnek): M vs B3 göreli
+  RMSE azalması +6,0 % [+3,3, +9,9], permütasyon p = 0,001; kazanç 105-270 dk
+  kutularında (`plans/14_pilot_2001_2005.md`). Statü: keşif, ön kayıt öncesi.
+- Henüz yok: 2006-2015 verisi ve GRACE, ön kayıt belgesi, ana analiz, tez metni. Durum ve kararlar: [`plans/00_genel_bakis.md`](plans/00_genel_bakis.md).
 
 ## Yapı
 
@@ -97,7 +99,7 @@ NRLMSIS referansı), `magnetic` (apexpy; Windows'ta kaynak derleme, tarif
 Büyük ham dosyalara bağlı testler `requires_data` işaretlidir ve dosya yoksa
 atlanır; Sidera köprüsü testleri Sidera kurulu değilse atlanır. Aynı dört kapı
 `.github/workflows/ci.yml` ile her push'ta koşar. Son yerel koşu:
-`plans/kanit/space_environment_testler_2026-10-06h.txt`.
+`plans/kanit/space_environment_testler_2026-10-06j.txt`.
 
 Sentetik iskelet testi (plan 07; gerçek veride birincil test bundan önce koşulmaz):
 

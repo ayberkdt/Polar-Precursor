@@ -43,7 +43,7 @@ def test_config_rejects_inconsistent_values():
 def test_ladder_resolves_families_to_columns():
     design = synthetic_design(SyntheticConfig(n_storms=3, samples_per_storm=5), seed=1)
     assert LADDER["B3"].columns(design) == [
-        c for c in design.columns if c.startswith(("low_lag", "drv_d_", "geo_"))
+        c for c in design.columns if c.startswith(("low_", "drv_d_", "geo_"))
     ]
     assert all(c.startswith("polar_") for c in LADDER["M"].columns(design) if "polar" in c)
     assert "mid_same" in LADDER["B3t"].columns(design)

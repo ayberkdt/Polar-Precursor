@@ -1,0 +1,4 @@
+tasarım pilot_20261006: 20525 satır, 30 küme; çıktı D:\Masaustu\Polar Precursor\results\pilot_20261006_deney_1611
+M vs B3: relative RMSE reduction +5.99% [+3.27%, +9.85%] (95% cluster bootstrap, 10000 resamples, seed 20270207, G = 30); storms improved 90%, bootstrap p 0.0001; permutation (one-sided, 1000 resamples, seed 20270207): observed +5.99%, null mean -0.25% (SD 0.02%), p = 0.0010
+rapor: D:\Masaustu\Polar Precursor\results\pilot_20261006_deney_1611\report.md
+exit 0

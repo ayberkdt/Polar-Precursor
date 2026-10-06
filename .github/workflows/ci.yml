@@ -1,0 +1,32 @@
+# Four gates on every push and pull request, same commands as README "Denetimler".
+# apexpy (extra "magnetic") needs a Fortran build and is left out; its tests skip
+# when the package is absent. requires_data tests skip without data/raw.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install from the lock file
+        run: uv sync --locked --python ${{ matrix.python }} --extra dev --extra catalog --extra density --extra heating
+      - name: ruff
+        run: uv run ruff check src tests examples
+      - name: mypy
+        run: uv run python -m mypy
+      - name: import-linter
+        run: uv run lint-imports
+      - name: pytest
+        run: uv run python -m pytest tests -q

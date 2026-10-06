@@ -1,0 +1,6 @@
+skeleton test: 30 storms x 40 samples, ladder ('B0', 'B1', 'B2', 'D', 'B3', 'B3k', 'B3t', 'M')
+cv outer 10 inner 5, alphas (0.01, 0.1, 1.0, 10.0, 100.0, 1000.0), bootstrap 2000 resamples per repeat
+synthetic: SyntheticConfig(n_storms=30, samples_per_storm=40, polar_gain=0.0, polar_lag_steps=3, low_ar=0.6, driver_gain=0.5, storm_sd=0.3, noise_sd=0.2, polar_noise_sd=0.3, inputs_low=4, inputs_polar=4, n_driver_lags=3, lead_steps=(2, 3, 4, 5), lead_bin_edges_min=(60.0, 105.0, 150.0, 195.0, 240.0, 270.0), storm_spacing_h=200.0, start='2003-01-01T00:00:00Z')
+null:   polar_gain 0: 200 repeats, seed 20270207; point estimate mean -0.48% (SD 0.32%, min -1.25%, max +0.61%); CI above 0 (M better) in 0.0%, below 0 (M worse) in 39.0%; 1134.2 s
+signal: polar_gain 0.3: 200 repeats, seed 20270207; point estimate mean +7.17% (SD 1.47%, min +3.90%, max +11.41%); CI above 0 (M better) in 100.0%, below 0 (M worse) in 0.0%; 1266.0 s
+PASS: PASS false positive rate (CI above 0 under the null) 0.0% <= 5%; PASS recovery 100.0% >= 80%; PASS mean recovered gain positive

@@ -14,19 +14,27 @@ paketini tutar.
 - Fırtına kataloğu kurucu, şok ve epok kuralları, sürücü/indeks/geometri
   öznitelikleri, geçiş bölütleme ve örnek kurucu yazıldı; hepsi 29 Ekim 2003
   CHAMP günü üzerinde sınandı.
-- Henüz yok: 2001-2015 tam veri koşusu, pilot, modeller, istatistik, tez metni.
-  Durum ve kararlar: [`plans/00_genel_bakis.md`](plans/00_genel_bakis.md).
+- Deney katmanı yazıldı (`polar_precursor`): model merdiveni B0-M (ridge),
+  fırtına gruplu iç içe çapraz doğrulama, küme bootstrap, tabakalı permütasyon,
+  güç; sentetik iskelet testi plan 07'deki iki ölçütle koşuldu
+  (`plans/kanit/iskelet_testi_cikti_2026-10-06.txt`).
+- Henüz yok: 2001-2015 tam veri koşusu, gerçek veride pilot, ön kayıt belgesi,
+  tez metni. Durum ve kararlar: [`plans/00_genel_bakis.md`](plans/00_genel_bakis.md).
 
 ## Yapı
 
 ```
 00_ana_plan.md         Tez araştırma planı (kaynak belge)
-plans/                 00-12 numaralı tasarım, durum ve karar belgeleri
+plans/                 00-13 numaralı tasarım, durum ve karar belgeleri
 plans/kanit/           Ölçüm betikleri ve çıktıları; plandaki her sayının kaynağı
-src/space_environment/ Güneş ve jeomanyetik etkinlik paketi (aşağıda)
-tests/                 Gerçek veri kesitleriyle testler (tests/fixtures)
+configs/               Deney yapılandırmaları (ön kayıt düğmeleri; pilot.toml)
+src/space_environment/ Güneş ve jeomanyetik etkinlik paketi (aşağıda; Sidera'ya gidecek)
+src/polar_precursor/   Tez hattı: merdiven, doğrulama, istatistik, sentetik, deney (plans/13)
+tests/                 Gerçek veri kesitleri ve sentetik veriyle testler (tests/fixtures)
 examples/              Sidera ortamında koşan örnek
 sidera_merge/          Sidera'ya taşıma için kayıt, kaynakça ve veri kataloğu taslakları
+data/                  Ham ve türetilmiş veri (depoda yok; data/README.md yerleşimi anlatır)
+results/               Koşu çıktıları (depoda yok; results/README.md içeriği anlatır)
 ```
 
 `space_environment` paketi Sidera'nın katman düzenini taşır ve
@@ -45,14 +53,29 @@ sonraki veri hiçbir özniteliğe sızmaz (test edilir). Ayrıntı:
 [`plans/11_space_environment_modulu.md`](plans/11_space_environment_modulu.md),
 Sidera entegrasyonu: [`plans/12_sidera_entegrasyon_tasarimi.md`](plans/12_sidera_entegrasyon_tasarimi.md).
 
+`polar_precursor` paketi tezin araştırma kodudur ve `space_environment`'ın
+üstünde durur (ters bağımlılık `lint-imports` ile yasak):
+
+| Paket | İçerik |
+| --- | --- |
+| `config` | Ön kayıt düğmeleri (`configs/pilot.toml`), yapılandırma özeti |
+| `design` | Sütun sözleşmesi, merdiven B0 B1 B2 D B3 B3k B3t M, tasarım matrisi kurucu |
+| `models`, `metrics` | Kapalı biçim ridge; artık, RMSE, korelasyon, beceri, fırtına başına kayıp, tepe hataları |
+| `validation` | Fırtına gruplu, epok sıralı katlar; 57 saat tampon denetimi; iç içe çapraz doğrulama |
+| `statistics` | Küme bootstrap (d_s, göreli RMSE azalması), tabakalı permütasyon, güç |
+| `synthetic`, `experiment` | Bilinen kutup katkılı sentetik fırtınalar; uçtan uca koşu, iskelet testi, koşu kaydı |
+
+Ayrıntı ve ölçülen iskelet sonuçları: [`plans/13_deney_katmani.md`](plans/13_deney_katmani.md).
+
 ## Kurulum
 
-Python 3.10-3.12. Depo `uv` ile kuruldu; `pip` de çalışır.
+Python 3.10-3.12. Ortam `uv.lock` ile sabittir:
 
 ```bash
-uv venv .venv --python 3.12
-uv pip install --python .venv/Scripts/python.exe -e ".[dev,catalog,density,heating]"
+uv sync --locked --extra dev --extra catalog --extra density --extra heating
 ```
+
+`pip` ile de kurulur (`pip install -e ".[dev,catalog,density,heating]"`).
 
 İsteğe bağlı ekler: `catalog` (openpyxl, Richardson-Cane xlsx), `density`
 (cdflib, ESA CDF), `heating` (h5py, Zenodo arşivi), `magnetic` (apexpy; Windows'ta
@@ -68,8 +91,15 @@ kaynak derleme, tarif `plans/04`). Çekirdek yalnız numpy ve pandas ister.
 ```
 
 Büyük ham dosyalara bağlı testler `requires_data` işaretlidir ve dosya yoksa
-atlanır; Sidera köprüsü testleri Sidera kurulu değilse atlanır. Son koşu:
-`plans/kanit/space_environment_testler_2026-10-06d.txt`.
+atlanır; Sidera köprüsü testleri Sidera kurulu değilse atlanır. Aynı dört kapı
+`.github/workflows/ci.yml` ile her push'ta koşar. Son yerel koşu:
+`plans/kanit/space_environment_testler_2026-10-06f.txt`.
+
+Sentetik iskelet testi (plan 07; gerçek veride birincil test bundan önce koşulmaz):
+
+```bash
+PYTHONPATH=src .venv/Scripts/python.exe -m polar_precursor.experiment.skeleton --repeats 200 --out plans/kanit/iskelet_testi_cikti_2026-10-06.txt
+```
 
 ## Veri
 

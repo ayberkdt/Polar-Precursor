@@ -17,6 +17,7 @@ Hazırlanma: 5 Ekim 2026. Ana plan: `../00_ana_plan.md` (İndirilenler klasörü
 | `09_literatur.md` | Yenilik durumu, okuma listesi, yakın çalışmalar |
 | `10_sidera_hazirlik_analizi.md` | Sidera'da ne hazır, ne eksik, hangi tuzaklar var |
 | `11_space_environment_modulu.md` | Güneş ve jeomanyetik etkinlik modülü: tasarım, durum, Sidera'ya taşıma planı |
+| `13_deney_katmani.md` | `polar_precursor` paketi: merdiven B0-M, fırtına gruplu iç içe ÇD, küme bootstrap, permütasyon, sentetik iskelet; ölçülen iskelet sonuçları |
 | `12_sidera_entegrasyon_tasarimi.md` | Sidera'ya güneş aktivitesi bölümü: karar (evet), hedef yerleşim, genel yüzey, kayıt ve veri taslakları, taşıma adımları |
 | `kanit/` | Bu oturumda koşulan kontrol betiği ve çıktısı |
 
@@ -89,6 +90,7 @@ Soru: Sidera'ya güneş aktivitesi bölümü eklenmeli mi? **Evet**; gerekçe ve
 - Denetimler: 74 test (proje), 71 test (Sidera ortamı), ruff, mypy, lint-imports temiz.
 - Akşam eki (Sidera belgeleri sana kalırken): **ACE gecikmesi ölçüldü** (28 Eki 2003: kaydırılmış ACE Bz ile OMNI r = 0,73, ek gecikme +7 dk; `02`); **indeks ve geometri öznitelikleri** yazıldı (A katmanı 37 + 8 + 6 = 51, aralık bitmeden kullanılmaz; `06`); **sakin sarmalayıcı** `QuietGeomagneticProvider` (`12`). Testler 79 (proje) / 76 (Sidera ortamı); tüm kapılar temiz (`kanit/space_environment_testler_2026-10-06c.txt`).
 - Gece eki: **geçiş bölütleme ve örnek kurucu** yazıldı; gerçek CHAMP gününde 31 alçak / 16+16 kutup parça, 46 dk aralık, sızıntı sıfır (`04`). **apexpy proje ortamına kuruldu**, QD enlem ve MLT iz üstüne ekleniyor. **JB2008 girdileri pyatmos ile birebir doğrulandı**; DTC saat eşlemesi ikincil kaynakla kapandı (`02`). **OMNI 5 dk** gerçek yıllık dosyayla sınandı. Testler 91 (proje) / 87 (Sidera ortamı), tüm kapılar temiz (`kanit/space_environment_testler_2026-10-06d.txt`).
+- Öğle eki: **deney katmanı yazıldı** (`src/polar_precursor/`, `13`): merdiven B0 B1 B2 D B3 B3k B3t M (kapalı biçim ridge), epok sıralı fırtına gruplu iç içe ÇD + 57 sa tampon reddi, fırtına başına MSE / beceri / tepe hataları, küme bootstrap, sınıf × öngörü kutusu tabakalı permütasyon, güç, sentetik fırtına üreteci, uçtan uca `run_experiment`, koşu kaydı. Ön kayıt düğmeleri `configs/pilot.toml` (plan 07 önerileri; karar değil). **Sentetik iskelet testi (plan 07) koşuldu:** sıfır durumunda aralık sıfırı yalnız eksi tarafta dışlıyor (iç içe model cezası), artı tarafta değil; ölçüt H1 yönünde tek yönlü yazıldı; sayılar `kanit/iskelet_testi_cikti_2026-10-06.txt` ve `kanit/permutasyon_sentetik_kaniti_cikti_2026-10-06.txt`. Depo eklentileri: `uv.lock`, `.github/workflows/ci.yml`, `data/README.md`, `results/README.md`. Testler **111** (proje), tüm kapılar temiz (`kanit/space_environment_testler_2026-10-06f.txt`).
 
 ## Senden karar bekleyenler
 

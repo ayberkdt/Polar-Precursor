@@ -50,6 +50,8 @@ Danışmana gönderilecek tek sayfanın maddeleri. Her biri için bu belgede bir
 
 Bu sınama geçmeden gerçek veride birincil test koşulmaz.
 
+**Durum (6 Eki 2026, yazıldı ve koşuldu; `13`, `kanit/iskelet_testi_cikti_2026-10-06.txt`):** iskelet `polar_precursor.experiment.skeleton` ile 200 tekrar × {γ = 0, γ = 0,3}, 30 fırtına × 40 örnek üzerinde koşuldu. Bulgu: sıfır durumunda bootstrap aralığı sıfırı yalnız **eksi** tarafta dışlıyor (M, gerçekte sıfır olan sekiz kutup katsayısını kestirdiği için B3'ten biraz kötü: ana plandaki Clark-West iç içe model cezası); artı tarafta dışlama oranı sıfıra yakın. 1. sınama bu yüzden H1'in yönünde okunur: "aralık tamamen sıfırın üstünde" oranı ≤ %5. İki yönlü oran da raporlanır. Permütasyon testi cezayı sıfır dağılımına taşır (`kanit/permutasyon_sentetik_kaniti_cikti_2026-10-06.txt`); birincil bootstrap M aleyhine muhafazakârdır, bu ön kayıtta yazılmalı.
+
 ## Güç
 
 Ana plandaki bağıntı: saptanabilir ortalama fark ≈ 2,8 × SD / √G. Fırtına sayısına göre (hesap):
@@ -95,3 +97,5 @@ Her model × öngörü süresi kutusu × sınıf için: log-oran artığının o
 - [ ] Ön kayıt belgesinin yazımı (Ocak öncesi).
 - [ ] İstatistik kaynaklarının (özellikle az kümeli bootstrap ve iç içe model testi) tam metinden teyidi.
 - [ ] Gerçek G (hafta 2 sonu).
+- [ ] Ön kayıt belgesine ek madde: bootstrap testinin iç içe model cezasıyla M aleyhine muhafazakâr olduğu ve permütasyonun bunu düzelttiği (iskelet bulgusu, `13`).
+- [x] İskelet testi kodu ve koşusu (6 Eki 2026, `13`).

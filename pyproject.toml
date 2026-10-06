@@ -7,7 +7,7 @@ name = "space-environment"
 version = "0.1.0.dev0"
 description = "Solar and geomagnetic activity data for thermosphere and drag studies; designed to be merged into Sidera"
 requires-python = ">=3.10"
-dependencies = ["numpy>=1.24,<3", "pandas>=2.0,<3"]
+dependencies = ["numpy>=1.24,<3", "pandas>=2.0,<3", "tomli>=2.0; python_version < '3.11'"]
 
 [project.optional-dependencies]
 dev = ["pytest>=7.2,<10", "ruff==0.12.0", "mypy>=1.8,<2", "pandas-stubs", "import-linter>=2.0,<3"]
@@ -34,7 +34,7 @@ ignore_missing_imports = true
 warn_unused_ignores = true
 check_untyped_defs = true
 disallow_untyped_defs = true
-files = ["src/space_environment"]
+files = ["src/space_environment", "src/polar_precursor"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -48,7 +48,26 @@ markers = [
 # builders. The Sidera bridge is an application-level consumer like analysis.
 # Run: lint-imports
 [tool.importlinter]
-root_package = "space_environment"
+root_packages = ["space_environment", "polar_precursor"]
+
+# The thesis line consumes space_environment and never the other way round.
+[[tool.importlinter.contracts]]
+name = "space_environment does not depend on the thesis package"
+type = "forbidden"
+source_modules = ["space_environment"]
+forbidden_modules = ["polar_precursor"]
+
+[[tool.importlinter.contracts]]
+name = "polar_precursor packages form one layer stack"
+type = "layers"
+layers = [
+  "polar_precursor.experiment",
+  "polar_precursor.statistics",
+  "polar_precursor.validation",
+  "polar_precursor.models | polar_precursor.metrics | polar_precursor.synthetic",
+  "polar_precursor.design",
+  "polar_precursor.config",
+]
 
 [[tool.importlinter.contracts]]
 name = "space_environment packages form one layer stack"

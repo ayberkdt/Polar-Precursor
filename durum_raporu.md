@@ -1,6 +1,6 @@
 # Polar Precursor — Durum Raporu
 
-Tarih: 6 Ekim 2026. Depo: https://github.com/ayberkdt/Polar-Precursor (son commit `b76517a`).
+Tarih: 6 Ekim 2026, gece güncellemesi. Depo: https://github.com/ayberkdt/Polar-Precursor (son commit `614f2f7`).
 Her sayının kaynağı `plans/kanit/` altındaki çıktı dosyalarıdır; aşağıda ilgili dosya adı parantezde verilir.
 
 ## 1. Tezin sorusu
@@ -18,7 +18,7 @@ Yüksek enlem (kutup) termosfer yoğunluğu, alçak enlem yoğunluğunu 1-4 saat
 
 ### 2.2 Deney katmanı: `polar_precursor` paketi (tezde kalır)
 
-- Model merdiveni B0 B1 B2 D B3 B3k B3t M, kapalı biçim ridge; sütun sözleşmesi; tasarım matrisi kurucu.
+- Model merdiveni B0 B1 B2 D B3 B3k B3t B3t2 M, kapalı biçim ridge; sütun sözleşmesi (sektöre göre alçak enlem gecikmeleri dahil); tasarım matrisi kurucu.
 - Fırtına gruplu, epok sıralı, iç içe çapraz doğrulama; 57 saat tampon denetimi.
 - Küme bootstrap (fırtına başına d_s, göreli RMSE azalması), sınıf × öngörü kutusu tabakalı permütasyon, öngörü kutusu başına Holm, H4 ve kontrol karşılaştırmaları, güç.
 - Sentetik fırtına üreteci ve plan 07 iskelet testi: 200 tekrar, sıfır durumunda yanlış pozitif %0, bilinen katkı %100 geri bulundu (`iskelet_testi_cikti_2026-10-06.txt`). Bulgu: iç içe model cezası yüzünden bootstrap M aleyhine muhafazakâr; permütasyon bunu düzeltiyor.
@@ -27,7 +27,7 @@ Yüksek enlem (kutup) termosfer yoğunluğu, alçak enlem yoğunluğunu 1-4 saat
 
 ### 2.3 Depo
 
-README, `uv.lock`, CI iş akışı (ruff, mypy, import-linter, pytest), `data/README.md`, `results/README.md`, 14 plan belgesi. Son kapı koşusu: 121 test geçti, tüm denetimler temiz (`space_environment_testler_2026-10-06j.txt`). Commit'ler Ayberk adıyla.
+README, `uv.lock`, CI iş akışı (ruff, mypy, import-linter, pytest), `data/README.md`, `results/README.md`, 14 plan belgesi. Son kapı koşusu: 125 test geçti, tüm denetimler temiz (`space_environment_testler_2026-10-06l.txt`). Commit'ler Ayberk adıyla.
 
 ### 2.4 Veri (1. ve 2. kademe, 6 Ekim)
 
@@ -72,6 +72,10 @@ Ana plan tablosu: M, B3'ü %3 eşiğinin üstünde geçiyor; B3t'yi anlamlı ama
 
 **Keşif.** Ön kayıt yazılmadan, tek uyduyla, 30 kümeyle, pilot tanımı yolda iki kez düzeltilerek (sektör sütunları; merdiven öneki) alındı. Tez iddiası değil; kapı kararı ve "en küçük anlamlı etki" girdisi. Pilot fırtınaları ana analizde havuzda kalır.
 
+## 3b. Kapsam raporu (tüm veri, `kapsam_raporu_2026-10-06.md`)
+
+197 benzersiz fırtına kümesi (2001-2015). Birincil havuz (küme sınıfı orta ve üstü): katalogda 119, en az bir uyduda örnekli **110**, iki uyduda birden 44. CHAMP 110 kümeden 104'ü örnekli (57 434 örnek), GRACE-A 197'den 160'ı (80 264 örnek). 110 fırtına 0,27 SD'yi saptar; pilot etkisi 0,68 SD. Dengesizlik: aşırı sınıfın tamamı ve şiddetlilerin çoğu 2001-2005'te; 2011-2015 zayıf ve orta ağırlıklı.
+
 ## 4. Yolda yakalanan hatalar
 
 - İlk pilot koşusunda B2 kalıcılıktan kötüydü: doğrusal model "hedefle aynı sektördeki son geçiş"i seçemiyor; gündüz/gece farkı büyük. Sektöre göre gecikme sütunları eklendi.
@@ -79,16 +83,17 @@ Ana plan tablosu: M, B3'ü %3 eşiğinin üstünde geçiyor; B3t'yi anlamlı ama
 - Küme sınıfı örneğin düştüğü ICME satırından alınıyordu; iki aşırı küme "orta/şiddetli" görünüyordu. Küme sınıfı = en şiddetli üye.
 - OMNI 2003 indirmesinde iki süreç aynı dosyaya yazdı; silinip yeniden indirildi, kesitle doğrulandı.
 - C: diski doldu; %TEMP% temizlendi (5 GB).
+- Kapsam koşusunda (tüm veri) dört hata daha: CDF'de konumu eksik kayıtlar (referans artık düğüm dışı bırakıp içdeğerliyor); fırtına önbellek kimliğinin bloklar arasında çakışması (kimlik artık rahatsızlık zamanı; pilot etkilenmedi); **F10.7 radyo patlaması günleri** (2001-2015'te 12 gün, 938 sfu'ya kadar; NRLMSIS NaN veriyordu ve 81 günlük ortalamayı ≈5 sfu kaydırıyordu; tarama kuralı eklendi, pilot 1-4 taramasız koştu); bellek yetersizliği (başka oturumların süreçleri; betik blok başına ayrı sürece alındı).
 
 ## 5. Sırada
 
 Senin kararın gereken:
 
-1. **Ön kayıt belgesi**: plan 07'deki 11 karar + iskelet bulgusu (bootstrap muhafazakâr) + kapı okuması. Sonra `configs/pilot.toml` güncellenir.
+1. **Ön kayıt belgesi**: taslak yazıldı (`plans/15_on_kayit_taslagi.md`, 17 madde, her birinde öneri ve ölçülmüş gerekçe); senin imzan bekleniyor. Sonra `configs/main.toml` üretilir ve kod etiketlenir.
 2. ~~2. kademe veri~~ indi ve doğrulandı; ~~kapsam raporu~~ çıktı: birincil havuz (orta ve üstü) 110 fırtına kümesi örnekli, 138 bin örnek (`plans/kanit/kapsam_raporu_2026-10-06.md`). Kararın: uydu kapsam eşiği (%70 önerisi).
 3. Lisans ve GitHub açıklaması.
 
-Kod tarafında kalan: B3t ikinci tanımı, Liu-2010 taban puanı, gradient boosting basamağı, epok duyarlılığı (±30 dk), sürücüsüz örnekler ikincil analizi, Sidera ortamında referans çapraz kontrolü.
+Kod tarafında kalan: Liu-2010 taban puanı, gradient boosting basamağı (ikincil), epok duyarlılığı (±30 dk), sürücüsüz örnekler ikincil analizi, Sidera ortamında referans çapraz kontrolü. B3t ikinci tanımı yapıldı.
 
 ## 6. Takvim
 

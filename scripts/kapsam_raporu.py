@@ -1,6 +1,10 @@
 """Kapsam raporu: her fırtına kümesi için uydu başına gün/kayıt/parça/örnek sayıları.
 
-    PYTHONPATH=src .venv/Scripts/python.exe scripts/kapsam_raporu.py
+    PYTHONPATH=src .venv/Scripts/python.exe scripts/kapsam_raporu.py [--block 2006-2010]
+
+Bellek: OMNI blok çerçevesi ≈1 GB; makinede boş bellek azsa blokları ayrı süreçlerde
+koşmak için ``--block`` verilir (her blok coverage_<uydu>_<blok>.csv yazar; özet, klasördeki
+bütün blok dosyalarından her seferinde yeniden kurulur).
 
 Ön kayıt taslağı bölüm D'nin istediği tablo: ana analizden önce, hangi fırtına
 kümesinin hangi uyduda yeterli veriye sahip olduğu. Katalog ve veri seti kurucu
@@ -38,16 +42,21 @@ SATELLITES = {"CHAMP": (2001, 2010), "GRACE-A": (2002, 2015)}
 ORDER = ["weak", "moderate", "strong", "severe", "extreme"]
 
 
-def main() -> int:
+def main(argv: list[str]) -> int:
+    only = None
+    if "--block" in argv:
+        first_s, last_s = argv[argv.index("--block") + 1].split("-")
+        only = (int(first_s), int(last_s))
     config = load_config(ROOT / "configs/pilot.toml")
     out = ROOT / "results" / f"kapsam_{datetime.now():%Y%m%d}"
     out.mkdir(parents=True, exist_ok=True)
     provider = GfzIndexProvider.from_file(GFZ, geomagnetic="measured")
     reference = QuietNrlmsisReference(provider)
-    coverage_by_satellite: dict[str, list[pd.DataFrame]] = {name: [] for name in SATELLITES}
     lines = [f"# Kapsam raporu, {datetime.now():%Y-%m-%d %H:%M}", ""]
     started = time.perf_counter()
     for first, last in BLOCKS:
+        if only is not None and (first, last) != only:
+            continue
         omni = pd.concat(
             [
                 read_omni_hro(RAW / f"omni/yearly_min/omni_min{y}.asc", cadence="1min")
@@ -86,7 +95,7 @@ def main() -> int:
             coverage["satellite"] = satellite
             coverage["block"] = f"{first}-{last}"
             coverage["cluster_intensity"] = coverage["group"].map(classes)
-            coverage_by_satellite[satellite].append(coverage)
+            coverage.to_csv(out / f"coverage_{satellite}_{first}_{last}.csv", index=False)
             usable = coverage[coverage["design_rows"] > 0]
             lines.append(
                 f"- {satellite}: {len(coverage)} ICME satırı, örnekli {len(usable)}, "
@@ -101,7 +110,8 @@ def main() -> int:
     lines.append("")
     lines.append("| uydu | sınıf | kümeler | örnekli | gün oranı ortanca | satır toplam |")
     lines.append("| --- | --- | --- | --- | --- | --- |")
-    for satellite, parts in coverage_by_satellite.items():
+    for satellite in SATELLITES:
+        parts = [pd.read_csv(path) for path in sorted(out.glob(f"coverage_{satellite}_*_*.csv"))]
         if not parts:
             continue
         table = pd.concat(parts, ignore_index=True)
@@ -133,9 +143,12 @@ def main() -> int:
     )
     text = "\n".join(lines) + "\n"
     (out / "ozet.md").write_text(text, encoding="utf-8")
+    (ROOT / "plans/kanit" / f"kapsam_raporu_{datetime.now():%Y-%m-%d}.md").write_text(
+        text, encoding="utf-8"
+    )
     print(text)
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))

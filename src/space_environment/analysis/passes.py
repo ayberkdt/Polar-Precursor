@@ -153,6 +153,9 @@ def segment_track(
         target = np.log(density)
         if reference is not None:
             target = target - np.log(track[reference].to_numpy(dtype=np.float64))
+    # A record without a finite target (reference missing or non-positive) is
+    # not a valid sample even when the density flag is nominal.
+    valid &= np.isfinite(target)
     target = np.where(valid, target, np.nan)
     direction = orbit_direction(geo_lat, min_turning_latitude_deg=cfg.min_turning_latitude_deg)
     orbit = orbit_numbers(geo_lat, direction)

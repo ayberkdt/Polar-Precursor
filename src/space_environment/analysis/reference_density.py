@@ -66,7 +66,8 @@ class QuietNrlmsisReference:
 
     @property
     def label(self) -> str:
-        return f"NRLMSIS {self.version} via pymsis, ap={self.quiet_ap:g} in all 7 slots"
+        f107 = getattr(self.provider, "f107_source", "F10.7 from provider")
+        return f"NRLMSIS {self.version} via pymsis, ap={self.quiet_ap:g} in all 7 slots; {f107}"
 
     def solar_inputs(self, times: pd.DatetimeIndex) -> tuple[np.ndarray, np.ndarray]:
         """Previous-day F10.7 and centred 81-day mean per sample, from the provider."""

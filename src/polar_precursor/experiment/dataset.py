@@ -104,6 +104,7 @@ def _cache_key(
     *,
     has_drivers: bool,
     has_oracle: bool,
+    reference_label: str = "",
 ) -> str:
     """Cache identity: design version, configuration, satellite, storm, reference stride,
     and whether driver / oracle columns were attached (a coverage-only build without
@@ -115,7 +116,7 @@ def _cache_key(
     """
     text = (
         f"v{DESIGN_VERSION}|{config.digest()}|{satellite}|{storm_identity}|{stride}"
-        f"|drv={int(has_drivers)}|oracle={int(has_oracle)}"
+        f"|drv={int(has_drivers)}|oracle={int(has_oracle)}|ref={reference_label}"
     )
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
@@ -151,6 +152,7 @@ def build_storm_design(
             reference_stride,
             has_drivers=drivers is not None,
             has_oracle=oracle_drivers is not None,
+            reference_label=reference_model.label,
         )
         stamp = pd.Timestamp(storm["disturbance_utc"]).strftime("%Y%m%dT%H%M")
         cache_file = cache_dir / f"{satellite}_{stamp}_{key}.parquet"

@@ -21,6 +21,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from datetime import datetime, timedelta
 
+import numpy as np
+
 from space_environment.common.timeutil import require_utc, utc_day
 from space_environment.io.gfz import GfzDailyTable
 
@@ -94,7 +96,71 @@ def nrlmsis_ap_history(
     return (value(0), value(1), value(2), value(3), mean_12_33, mean_36_57)
 
 
+#: Daily F10.7 more than this factor above the median of its neighbours is a
+#: solar radio burst, not solar activity (Tapping 2013 describes the burst
+#: contamination of noon values). Measured in the GFZ file for 2001-2015:
+#: 12 days exceed 1.5x the 7-day median, up to 938.6 sfu on 2011-03-07; four of
+#: them fall the day before a major storm (2001-04-06, 2003-11-04, 2005-09-09,
+#: 2011-03-07) and NRLMSIS returns NaN for such inputs.
+F107_BURST_RATIO = 1.5
+F107_BURST_WINDOW_DAYS = 7
+
+
+def screen_f107_bursts(
+    f107_by_day: Mapping[datetime, float | None],
+    *,
+    ratio: float = F107_BURST_RATIO,
+    window_days: int = F107_BURST_WINDOW_DAYS,
+) -> tuple[dict[datetime, float | None], tuple[datetime, ...]]:
+    """Replace burst-contaminated daily F10.7 values by the mean of the nearest clean days.
+
+    A day is flagged when its value exceeds ``ratio`` times the median of the
+    other available values within ``window_days`` centred on it. Flagged days
+    are replaced by the mean of the nearest unflagged values before and after
+    (one side if the other is missing). Returns the cleaned mapping and the
+    replaced days, so the substitution can be reported.
+    """
+    if ratio <= 1.0 or window_days < 3 or window_days % 2 == 0:
+        raise ValueError("ratio must exceed 1 and window_days be an odd number of at least 3.")
+    days = sorted(f107_by_day)
+    values = {day: f107_by_day[day] for day in days}
+    half = window_days // 2
+    flagged: list[datetime] = []
+    for day in days:
+        value = values[day]
+        if value is None:
+            continue
+        neighbours = [
+            v
+            for offset in range(-half, half + 1)
+            if offset != 0 and (v := values.get(day + timedelta(days=offset))) is not None
+        ]
+        if len(neighbours) >= 2 and value > ratio * float(np.median(neighbours)):
+            flagged.append(day)
+    flagged_set = set(flagged)
+    cleaned = dict(values)
+    for day in flagged:
+        before = next(
+            (
+                values[d]
+                for d in reversed(days)
+                if d < day and d not in flagged_set and values[d] is not None
+            ),
+            None,
+        )
+        after = next(
+            (values[d] for d in days if d > day and d not in flagged_set and values[d] is not None),
+            None,
+        )
+        clean = [v for v in (before, after) if v is not None]
+        cleaned[day] = float(np.mean(clean)) if clean else None
+    return cleaned, tuple(flagged)
+
+
 __all__ = [
+    "F107_BURST_RATIO",
+    "F107_BURST_WINDOW_DAYS",
+    "screen_f107_bursts",
     "F107_AVERAGE_WINDOW_DAYS",
     "THREE_HOURS",
     "centred_mean_f107",

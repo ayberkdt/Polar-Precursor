@@ -35,6 +35,7 @@ from space_environment.io.gfz import GfzDailyRecord, GfzDailyTable, read_gfz_dai
 from space_environment.physics.index_conventions import (
     centred_mean_f107,
     nrlmsis_ap_history,
+    screen_f107_bursts,
     three_hourly_ap,
 )
 
@@ -84,6 +85,8 @@ class GfzIndexProvider:
 
     table: GfzDailyTable
     geomagnetic: GeomagneticMode = "measured"
+    f107_burst_screen: bool = True  # replace radio-burst days (see index_conventions)
+    f107_replaced_days: tuple[datetime, ...] = field(init=False, repr=False, compare=False)
     _by_day: dict[datetime, GfzDailyRecord] = field(init=False, repr=False, compare=False)
     _f107: dict[datetime, float | None] = field(init=False, repr=False, compare=False)
     _ap3h: dict[datetime, int | None] = field(init=False, repr=False, compare=False)
@@ -93,16 +96,35 @@ class GfzIndexProvider:
             raise ValueError("geomagnetic must be 'measured' or 'quiet'.")
         by_day = self.table.by_day()
         object.__setattr__(self, "_by_day", by_day)
-        object.__setattr__(
-            self, "_f107", {day: record.f107_obs_sfu for day, record in by_day.items()}
-        )
+        f107: dict[datetime, float | None] = {
+            day: record.f107_obs_sfu for day, record in by_day.items()
+        }
+        replaced: tuple[datetime, ...] = ()
+        if self.f107_burst_screen:
+            f107, replaced = screen_f107_bursts(f107)
+        object.__setattr__(self, "_f107", f107)
+        object.__setattr__(self, "f107_replaced_days", replaced)
         object.__setattr__(self, "_ap3h", three_hourly_ap(self.table))
 
     @classmethod
     def from_file(
-        cls, path: str | Path, *, geomagnetic: GeomagneticMode = "measured"
+        cls,
+        path: str | Path,
+        *,
+        geomagnetic: GeomagneticMode = "measured",
+        f107_burst_screen: bool = True,
     ) -> GfzIndexProvider:
-        return cls(table=read_gfz_daily(path), geomagnetic=geomagnetic)
+        return cls(
+            table=read_gfz_daily(path),
+            geomagnetic=geomagnetic,
+            f107_burst_screen=f107_burst_screen,
+        )
+
+    @property
+    def f107_source(self) -> str:
+        if not self.f107_burst_screen:
+            return "F10.7 observed, no burst screen"
+        return f"F10.7 observed, burst screen replaced {len(self.f107_replaced_days)} days"
 
     def get(self, utc: datetime) -> IndexState:
         moment = require_utc(utc)

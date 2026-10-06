@@ -60,14 +60,20 @@ def test_centred_mean_is_symmetric_window():
 
 
 def test_provider_applies_nrlmsis_conventions(gfz_daily_path):
-    provider = GfzIndexProvider.from_file(gfz_daily_path)
-    state = provider.get(ONSET)
+    raw = GfzIndexProvider.from_file(gfz_daily_path, f107_burst_screen=False)
+    state = raw.get(ONSET)
     assert state.f107 == 274.4  # observed flux of 28 October, not the 29th (291.7)
     table = read_gfz_daily(gfz_daily_path).by_day()
     centre = datetime(2003, 10, 29, tzinfo=UTC)
     window = [table[centre + timedelta(days=d)].f107_obs_sfu for d in range(-40, 41)]
     assert state.f107a == pytest.approx(sum(window) / 81.0)
     assert 146.0 < state.f107a < 148.0
+    # With the burst screen (default) the 560.9 sfu burst of 2003-11-04 leaves the
+    # 81-day window: the centred mean drops by about 5 sfu (measured 141.57).
+    screened = GfzIndexProvider.from_file(gfz_daily_path).get(ONSET)
+    assert screened.f107 == 274.4
+    assert 141.0 < screened.f107a < 142.0
+    state = screened
     assert state.ap_daily == 204.0
     assert state.kp == 9.0
     assert state.nrlmsis_ap_array(storm_mode=True) == (204.0, 400.0, 27.0, 39.0, 27.0, 22.0, 13.5)
@@ -91,3 +97,29 @@ def test_provider_rejects_naive_and_uncovered_epochs(gfz_daily_path):
     # Inside the table but too close to its edge for a centred 81-day mean.
     with pytest.raises(ValueError, match="centred mean is not defined"):
         provider.get(datetime(2003, 7, 10, tzinfo=UTC))
+
+
+def test_f107_burst_screen_replaces_radio_burst_days(gfz_daily_path):
+    from datetime import datetime, timedelta, timezone
+
+    from space_environment.physics.index_conventions import screen_f107_bursts
+    from space_environment.physics.space_weather import GfzIndexProvider
+
+    base = datetime(2003, 11, 1, tzinfo=timezone.utc)
+    series = {base + timedelta(days=i): 120.0 + i for i in range(9)}
+    series[base + timedelta(days=3)] = 560.9  # 2003-11-04 in the real GFZ file
+    cleaned, replaced = screen_f107_bursts(series)
+    assert replaced == (base + timedelta(days=3),)
+    assert cleaned[base + timedelta(days=3)] == pytest.approx((122.0 + 124.0) / 2)
+    assert all(cleaned[d] == series[d] for d in series if d not in replaced)
+
+    screened = GfzIndexProvider.from_file(gfz_daily_path, geomagnetic="measured")
+    raw = GfzIndexProvider.from_file(
+        gfz_daily_path, geomagnetic="measured", f107_burst_screen=False
+    )
+    burst_day = datetime(2003, 11, 4, tzinfo=timezone.utc)
+    assert burst_day in screened.f107_replaced_days
+    next_day = datetime(2003, 11, 5, 12, tzinfo=timezone.utc)
+    assert raw.get(next_day).f107 == pytest.approx(560.9)
+    assert 100.0 < screened.get(next_day).f107 < 200.0
+    assert "replaced" in screened.f107_source

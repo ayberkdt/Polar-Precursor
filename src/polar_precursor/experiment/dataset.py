@@ -99,7 +99,7 @@ class StormCoverage:
 def _cache_key(
     config: ExperimentConfig,
     satellite: str,
-    storm_row: int,
+    storm_identity: str,
     stride: int,
     *,
     has_drivers: bool,
@@ -107,9 +107,14 @@ def _cache_key(
 ) -> str:
     """Cache identity: design version, configuration, satellite, storm, reference stride,
     and whether driver / oracle columns were attached (a coverage-only build without
-    drivers must never be served to a run that expects them)."""
+    drivers must never be served to a run that expects them).
+
+    The storm is identified by its disturbance time, not by its row in the
+    catalogue table: row numbers restart in every catalogue build (measured
+    2026-10-06: a 2006-2010 coverage run was served 2001-2005 designs).
+    """
     text = (
-        f"v{DESIGN_VERSION}|{config.digest()}|{satellite}|{storm_row}|{stride}"
+        f"v{DESIGN_VERSION}|{config.digest()}|{satellite}|{storm_identity}|{stride}"
         f"|drv={int(has_drivers)}|oracle={int(has_oracle)}"
     )
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
@@ -142,12 +147,13 @@ def build_storm_design(
         key = _cache_key(
             config,
             satellite,
-            storm_row,
+            pd.Timestamp(storm["disturbance_utc"]).isoformat(),
             reference_stride,
             has_drivers=drivers is not None,
             has_oracle=oracle_drivers is not None,
         )
-        cache_file = cache_dir / f"{satellite}_rc{storm_row}_{key}.parquet"
+        stamp = pd.Timestamp(storm["disturbance_utc"]).strftime("%Y%m%dT%H%M")
+        cache_file = cache_dir / f"{satellite}_{stamp}_{key}.parquet"
         if cache_file.exists() and not force:
             design = pd.read_parquet(cache_file)
             meta = design.attrs

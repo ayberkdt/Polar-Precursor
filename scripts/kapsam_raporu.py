@@ -106,7 +106,7 @@ def main() -> int:
             continue
         table = pd.concat(parts, ignore_index=True)
         table.to_csv(out / f"coverage_{satellite}.csv", index=False)
-        per_cluster = table.groupby("group").agg(
+        per_cluster = table.groupby(["block", "group"]).agg(
             cluster_intensity=("cluster_intensity", "first"),
             days_found=("days_found", "sum"),
             days_needed=("days_needed", "sum"),

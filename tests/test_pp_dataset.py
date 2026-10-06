@@ -128,3 +128,19 @@ def test_build_dataset_on_real_day_with_cache(tmp_path: Path):
     )
     assert record.cached is False and len(design) == len(first_storm)
     assert not any(c.startswith("drv_") for c in design.columns)
+
+
+def test_cache_key_distinguishes_storms_with_the_same_row_number():
+    from polar_precursor.experiment.dataset import _cache_key
+
+    config = load_config(ROOT / "configs/pilot.toml")
+    a = _cache_key(
+        config, "CHAMP", "2003-10-29T06:11:00+00:00", 6, has_drivers=True, has_oracle=True
+    )
+    b = _cache_key(
+        config, "CHAMP", "2006-02-05T20:00:00+00:00", 6, has_drivers=True, has_oracle=True
+    )
+    c = _cache_key(
+        config, "CHAMP", "2003-10-29T06:11:00+00:00", 6, has_drivers=False, has_oracle=False
+    )
+    assert len({a, b, c}) == 3

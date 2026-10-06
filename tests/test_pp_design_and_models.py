@@ -10,7 +10,7 @@ import pytest
 
 from polar_precursor.config import CrossValidation, ExperimentConfig, PrimaryTest, load_config
 from polar_precursor.design import LADDER, TARGET, Family, assign_storms, build_design, ladder
-from polar_precursor.design.matrix import lead_bin_labels
+from polar_precursor.design.matrix import cluster_classes, lead_bin_labels
 from polar_precursor.models import fit_ridge
 from polar_precursor.synthetic import SyntheticConfig, synthetic_design
 from space_environment.analysis.passes import build_samples, segment_track
@@ -84,6 +84,24 @@ def test_assign_storms_inside_window_only():
     assert list(out["intensity"]) == ["none", "extreme", "none"]
 
 
+def test_cluster_class_is_the_most_intense_member():
+    storms = pd.DataFrame(
+        {
+            "disturbance_utc": pd.to_datetime(
+                ["2003-10-28T02:06:00Z", "2003-10-29T06:11:00Z", "2003-11-20T08:00:00Z"]
+            ),
+            "window_end_utc": pd.to_datetime(
+                ["2003-10-29T06:11:00Z", "2003-10-30T16:19:00Z", "2003-11-21T20:00:00Z"]
+            ),
+            "cluster": [11, 11, 12],
+            "intensity": ["moderate", "extreme", None],
+        }
+    )
+    assert cluster_classes(storms) == {11: "extreme", 12: "none"}
+    out = assign_storms(pd.Series([pd.Timestamp("2003-10-28T12:00:00Z")]), storms)
+    assert list(out["intensity"]) == ["extreme"]
+
+
 def test_build_design_on_real_champ_day_is_causal_and_complete():
     track = pd.read_csv(CHAMP_TRACK, index_col=0, parse_dates=True)
     track.index = (
@@ -114,6 +132,10 @@ def test_build_design_on_real_champ_day_is_causal_and_complete():
     assert (design["t0_utc"] >= pd.Timestamp("2003-10-29T06:00:00Z")).all()
     assert all(t.second == 0 for t in captured)
     assert all(t <= s for t, s in zip(captured, design["t0_utc"], strict=False) if True)
+    assert np.allclose(
+        design["low_same_lag1"].to_numpy(), design["persistence"].to_numpy(), equal_nan=True
+    )
+    assert "low_other_lag2" in design.columns
     for column in (
         "low_lag1",
         "polar_north_lag1",

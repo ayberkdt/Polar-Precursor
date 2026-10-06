@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 
 from polar_precursor.config import ExperimentConfig
-from polar_precursor.design.matrix import DriverFunction, build_design
+from polar_precursor.design.matrix import DESIGN_VERSION, DriverFunction, build_design
 from space_environment.analysis.passes import SampleConfig, build_samples, segment_track
 from space_environment.analysis.reference_density import (
     REFERENCE_COLUMN,
@@ -97,7 +97,7 @@ class StormCoverage:
 
 
 def _cache_key(config: ExperimentConfig, satellite: str, storm_row: int, stride: int) -> str:
-    text = f"{config.digest()}|{satellite}|{storm_row}|{stride}"
+    text = f"v{DESIGN_VERSION}|{config.digest()}|{satellite}|{storm_row}|{stride}"
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 

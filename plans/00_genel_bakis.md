@@ -17,6 +17,7 @@ Hazırlanma: 5 Ekim 2026. Ana plan: `../00_ana_plan.md` (İndirilenler klasörü
 | `09_literatur.md` | Yenilik durumu, okuma listesi, yakın çalışmalar |
 | `10_sidera_hazirlik_analizi.md` | Sidera'da ne hazır, ne eksik, hangi tuzaklar var |
 | `11_space_environment_modulu.md` | Güneş ve jeomanyetik etkinlik modülü: tasarım, durum, Sidera'ya taşıma planı |
+| `14_pilot_2001_2005.md` | 1. kademe veri indirmesi (OMNI 2001-2005, CHAMP pencere günleri), pilotun iki koşusu, merdiven tanısı ve kapı okuması |
 | `13_deney_katmani.md` | `polar_precursor` paketi: merdiven B0-M, fırtına gruplu iç içe ÇD, küme bootstrap, permütasyon, sentetik iskelet; ölçülen iskelet sonuçları |
 | `12_sidera_entegrasyon_tasarimi.md` | Sidera'ya güneş aktivitesi bölümü: karar (evet), hedef yerleşim, genel yüzey, kayıt ve veri taslakları, taşıma adımları |
 | `kanit/` | Bu oturumda koşulan kontrol betiği ve çıktısı |

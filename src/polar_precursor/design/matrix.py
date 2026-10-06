@@ -20,6 +20,12 @@ from space_environment.analysis.index_features import geometry_features
 
 DriverFunction = Callable[[pd.Timestamp], Mapping[str, float]]
 
+#: Bump when the columns or their meaning change; part of the dataset cache key.
+DESIGN_VERSION = 2
+
+#: Storm classes from the weakest up (space_environment.physics.storm_intensity).
+INTENSITY_ORDER: tuple[str, ...] = ("weak", "moderate", "strong", "severe", "extreme")
+
 
 def lead_bin_labels(lead_time_min: np.ndarray, edges_min: Sequence[float]) -> np.ndarray:
     """Bin label ``"<lo>-<hi>"`` per sample; samples outside the edges get ``"out"``."""
@@ -56,9 +62,30 @@ def assign_storms(t0: pd.Series, storms: pd.DataFrame) -> pd.DataFrame:
     out = pd.DataFrame(index=t0.index)
     out["storm_row"] = np.where(rows >= 0, rows, np.nan)
     cluster = storms["cluster"].to_numpy()
-    intensity = storms["intensity"].astype(str).to_numpy()
+    cluster_intensity = cluster_classes(storms)
     out[GROUP] = [int(cluster[r]) if r >= 0 else -1 for r in rows]
-    out[INTENSITY] = [intensity[r] if r >= 0 else "none" for r in rows]
+    out[INTENSITY] = [cluster_intensity[int(cluster[r])] if r >= 0 else "none" for r in rows]
+    return out
+
+
+def cluster_classes(storms: pd.DataFrame) -> dict[int, str]:
+    """Class of each cluster = its most intense member (the unit of analysis is the cluster).
+
+    A cluster that merges a moderate precursor with an extreme storm is an
+    extreme event for stratification and permutation strata; labelling it by
+    whichever row a sample happens to fall in would split one event over two
+    classes (measured on the 2001-2005 pilot before this rule: two extreme
+    clusters appeared as "moderate" and "severe").
+    """
+    rank = {name: i for i, name in enumerate(INTENSITY_ORDER)}
+    out: dict[int, str] = {}
+    for cluster, label in zip(storms["cluster"].to_numpy(), storms["intensity"], strict=True):
+        name = "none" if pd.isna(label) else str(label)
+        current = out.get(int(cluster), "none")
+        if rank.get(name, -1) > rank.get(current, -1):
+            out[int(cluster)] = name
+        else:
+            out.setdefault(int(cluster), current)
     return out
 
 
@@ -110,6 +137,18 @@ def build_design(
         }
         for k, value in enumerate(_lagged(value_of, low_ids, inputs_low), start=1):
             row[f"low_lag{k}"] = value
+        # Sector-aware history: the two low-latitude sectors (ascending/descending,
+        # roughly day and night) differ by a large offset, and a fixed linear
+        # combination of chronological lags cannot pick "the last pass of the
+        # target's sector" per row. Measured on the 2001-2005 CHAMP pilot before
+        # this change: B2 (chronological lags only) was worse than persistence
+        # even in sample (RMSE 0.1455 vs 0.1345).
+        other_sector = [i for i in low_ids if by_id.at[i, "direction"] != target_direction]
+        same_count = max(1, inputs_low // 2)
+        for k, value in enumerate(_lagged(value_of, same_sector, same_count), start=1):
+            row[f"low_same_lag{k}"] = value
+        for k, value in enumerate(_lagged(value_of, other_sector, same_count), start=1):
+            row[f"low_other_lag{k}"] = value
         for hemisphere in ("north", "south"):
             ids = list(sample[f"input_polar_{hemisphere}_segments"])
             for k, value in enumerate(_lagged(value_of, ids, inputs_polar), start=1):
@@ -141,4 +180,12 @@ def build_design(
     return design
 
 
-__all__ = ["DriverFunction", "assign_storms", "build_design", "lead_bin_labels"]
+__all__ = [
+    "DESIGN_VERSION",
+    "INTENSITY_ORDER",
+    "DriverFunction",
+    "assign_storms",
+    "build_design",
+    "cluster_classes",
+    "lead_bin_labels",
+]

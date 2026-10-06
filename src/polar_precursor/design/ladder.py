@@ -5,6 +5,8 @@ A design frame has one row per forecast sample and these column families:
 ``target_value``            log density ratio of the target low-latitude pass
 ``persistence``             last low-latitude pass of the target's sector (B1)
 ``low_lag1 … low_lagN``     last N low-latitude passes, most recent first
+``low_same_lag1 …``         last passes of the target's own sector (lag1 = persistence)
+``low_other_lag1 …``        last passes of the other sector
 ``polar_north_lag1 … N``    last N northern polar passes, most recent first
 ``polar_south_lag1 … N``    last N southern polar passes
 ``mid_same``                mid-latitude (40-55°) mean from the pass ending at t0

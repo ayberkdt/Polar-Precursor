@@ -1,0 +1,11 @@
+pilot 2001-2005, yapılandırma pilot c97064b20414, çıktı D:\Masaustu\Polar Precursor\results\pilot_20261006
+  [  38.9 s] OMNI 2629440 dakika
+  [   0.9 s] katalog: 133 ICME, sınıflı 132
+  seçilen kümeler: 30 ({'weak': 6, 'moderate': 10, 'strong': 8, 'severe': 4, 'extreme': 2}), 62 ICME satırı; tohum 20270207
+  [  68.5 s] sürücü kurucular hazır
+  [ 919.4 s] veri seti: 20525 satır, 30 küme; gün bulunan/gereken 209/211
+  [ 889.6 s] deney (ÇD + bootstrap + permütasyon)
+
+M vs B3: relative RMSE reduction +4.28% [+2.17%, +7.85%] (95% cluster bootstrap, 10000 resamples, seed 20270207, G = 30); storms improved 83%, bootstrap p 0.0001; permutation (one-sided, 1000 resamples, seed 20270207): observed +4.28%, null mean -0.21% (SD 0.02%), p = 0.0010
+rapor: D:\Masaustu\Polar Precursor\results\pilot_20261006\report.md
+exit 0

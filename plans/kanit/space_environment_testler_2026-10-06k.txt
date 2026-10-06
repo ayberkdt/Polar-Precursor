@@ -1,0 +1,28 @@
+# Kapılar, 6 Eki 2026 gece (B3t ikinci tanımı: mid_after, B3t2)
+# komutlar: ruff check src tests examples scripts; python -m mypy; lint-imports; pytest tests -q
+## ruff
+All checks passed!
+## mypy
+Success: no issues found in 58 source files
+## lint-imports
+=============
+Import Linter
+=============
+
+
+---------
+Contracts
+---------
+
+Analyzed 58 files, 83 dependencies.
+-----------------------------------
+
+space_environment does not depend on the thesis package KEPT
+polar_precursor packages form one layer stack KEPT
+space_environment packages form one layer stack KEPT
+
+Contracts: 3 kept, 0 broken.
+## pytest
+........................................................................ [ 59%]
+..................................................                       [100%]
+122 passed, 1 skipped in 33.54s

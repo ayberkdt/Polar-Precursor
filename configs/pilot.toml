@@ -6,7 +6,7 @@
 
 name = "pilot"
 description = "30 storms, CHAMP only, 2001-05 .. 2005-12; measures the storm-to-storm SD"
-ladder = ["B0", "B1", "B2", "D", "B3", "B3k", "B3t", "M"]
+ladder = ["B0", "B1", "B2", "D", "B3", "B3k", "B3t", "B3t2", "M"]
 
 [storms]
 period_start = "2001-05-01"

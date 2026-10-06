@@ -21,7 +21,7 @@ from space_environment.analysis.index_features import geometry_features
 DriverFunction = Callable[[pd.Timestamp], Mapping[str, float]]
 
 #: Bump when the columns or their meaning change; part of the dataset cache key.
-DESIGN_VERSION = 2  # 2: sector-aware low lags added (ladder prefix fix changed no column)
+DESIGN_VERSION = 3  # 2: sector-aware low lags; 3: mid_after (second B3t definition)
 
 #: Storm classes from the weakest up (space_environment.physics.storm_intensity).
 INTENSITY_ORDER: tuple[str, ...] = ("weak", "moderate", "strong", "severe", "extreme")
@@ -155,6 +155,16 @@ def build_design(
                 row[f"polar_{hemisphere}_lag{k}"] = value
         mid = sample["input_mid_segment"]
         row["mid_same"] = float("nan") if pd.isna(mid) else value_of[int(mid)]
+        mid_after = sample.get("input_mid_after_segment")
+        if mid_after is None or pd.isna(mid_after):
+            row["mid_after"] = float("nan")
+            row["mid_after_lead_h"] = float("nan")
+        else:
+            row["mid_after"] = value_of[int(mid_after)]
+            mid_after_end = pd.Timestamp(by_id.at[int(mid_after), "end_utc"])
+            row["mid_after_lead_h"] = (
+                pd.Timestamp(sample["target_mid_utc"]) - mid_after_end
+            ) / pd.Timedelta(1, unit="h")
         geometry = geometry_features(
             t0.to_pydatetime(),
             lead_time_h=float(sample["lead_time_min"]) / 60.0,

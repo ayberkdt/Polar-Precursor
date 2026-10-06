@@ -23,7 +23,8 @@ from polar_precursor.statistics.bootstrap import BootstrapResult, cluster_bootst
 PAIRS_SECONDARY: tuple[tuple[str, str, str], ...] = (
     ("B3", "M", "H1 primary: polar passes added"),
     ("D", "B3", "H4: own history added to drivers"),
-    ("B3t", "M", "control: polar vs mid-latitude freshness"),
+    ("B3t", "M", "control: polar vs mid-latitude freshness (before the pass)"),
+    ("B3t2", "M", "control: polar vs mid-latitude freshness (after the pass)"),
     ("B3k", "M", "control: polar vs oracle drivers"),
     ("B1", "B2", "ladder: autoregression over persistence"),
     ("B2", "B3", "ladder: drivers over own history"),

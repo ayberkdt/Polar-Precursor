@@ -23,7 +23,7 @@ CHAMP_TRACK = FIXTURES / "champ_track_20031029_60s.csv"
 def test_pilot_config_loads_and_matches_defaults():
     config = load_config(ROOT / "configs" / "pilot.toml")
     assert config.name == "pilot"
-    assert config.ladder == ("B0", "B1", "B2", "D", "B3", "B3k", "B3t", "M")
+    assert config.ladder == ("B0", "B1", "B2", "D", "B3", "B3k", "B3t", "B3t2", "M")
     assert config.test.reference_model == "B3" and config.test.candidate_model == "M"
     assert config.cv.buffer_h == 57.0
     assert config.storms.satellites == ("CHAMP",)
@@ -47,6 +47,9 @@ def test_ladder_resolves_families_to_columns():
     ]
     assert all(c.startswith("polar_") for c in LADDER["M"].columns(design) if "polar" in c)
     assert "mid_same" in LADDER["B3t"].columns(design)
+    assert LADDER["B3t2"].columns(design) == [
+        c for c in design.columns if c.startswith(("low_", "drv_d_", "mid_after", "geo_"))
+    ]
     assert any(c.startswith("drv_oracle_") for c in LADDER["B3k"].columns(design))
     assert not any(c.startswith("drv_oracle_") for c in LADDER["B3"].columns(design))
     assert LADDER["B0"].columns(design) == []

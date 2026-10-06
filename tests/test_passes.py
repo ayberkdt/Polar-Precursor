@@ -114,3 +114,23 @@ def test_custom_bands_and_missing_columns():
         segment_track(
             pd.DataFrame({"latitude_deg": [0.0]}, index=pd.DatetimeIndex(["2003-10-29"], tz="UTC"))
         )
+
+
+def test_mid_after_input_is_fresher_than_t0_and_ends_before_target():
+    """Second B3t definition: first mid segment after the polar pass, before the target."""
+    track = pd.read_csv(
+        FIXTURES / "champ_track_20031029_60s.csv", index_col="time_utc", parse_dates=True
+    )
+    segments = segment_track(track)
+    samples = build_samples(segments)
+    by_id = segments.set_index("segment_id")
+    present = samples["input_mid_after_segment"].notna()
+    assert present.mean() > 0.9  # almost every polar pass is followed by a mid segment
+    for _, sample in samples[present].iterrows():
+        mid_after = int(sample["input_mid_after_segment"])
+        assert by_id.at[mid_after, "band"] == "mid"
+        assert by_id.at[mid_after, "start_utc"] >= sample["t0_utc"]
+        assert by_id.at[mid_after, "end_utc"] < by_id.at[int(sample["target_segment"]), "start_utc"]
+        assert by_id.at[mid_after, "hemisphere"] == sample["polar_hemisphere"]
+        if not pd.isna(sample["input_mid_segment"]):
+            assert by_id.at[int(sample["input_mid_segment"]), "end_utc"] <= sample["t0_utc"]

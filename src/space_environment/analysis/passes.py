@@ -295,6 +295,9 @@ def build_samples(segments: pd.DataFrame, *, config: SampleConfig | None = None)
             cfg.inputs_polar
         )
         mid_inputs = mid[mid["end_utc"] <= t0].tail(1)
+        mid_after_all = mid[
+            (mid["start_utc"] >= t0) & (mid["hemisphere"] == pass_row["hemisphere"])
+        ]
         for _, target in targets.iterrows():
             rows.append(
                 {
@@ -312,6 +315,7 @@ def build_samples(segments: pd.DataFrame, *, config: SampleConfig | None = None)
                     "input_mid_segment": None
                     if mid_inputs.empty
                     else int(mid_inputs["segment_id"].iloc[0]),
+                    "input_mid_after_segment": _mid_after(mid_after_all, target["start_utc"]),
                 }
             )
     samples = pd.DataFrame(rows)
@@ -320,8 +324,24 @@ def build_samples(segments: pd.DataFrame, *, config: SampleConfig | None = None)
     return samples
 
 
+def _mid_after(candidates: pd.DataFrame, target_start: pd.Timestamp) -> int | None:
+    """First mid-latitude segment after the polar pass that ends before the target starts.
+
+    This is the second B3t definition (plan 04): a mid-latitude measurement
+    *fresher* than the polar pass. It ends after t0 by construction, so it is
+    exempt from the t0 rule in ``check_no_leakage`` but must end before the
+    target starts.
+    """
+    usable = candidates[candidates["end_utc"] < target_start]
+    return None if usable.empty else int(usable["segment_id"].iloc[0])
+
+
 def check_no_leakage(samples: pd.DataFrame, segments: pd.DataFrame) -> None:
-    """Raise if an input segment ends after its sample t0 or a target starts at or before it."""
+    """Raise if an input segment ends after its sample t0 or a target starts at or before it.
+
+    ``input_mid_after_segment`` is the one input allowed to end after t0 (it
+    defines a later issue time); it must still end before the target starts.
+    """
     by_id = segments.set_index("segment_id")
     for _, sample in samples.iterrows():
         t0 = sample["t0_utc"]
@@ -335,8 +355,13 @@ def check_no_leakage(samples: pd.DataFrame, segments: pd.DataFrame) -> None:
         late = [i for i in inputs if by_id.at[i, "end_utc"] > t0]
         if late:
             raise AssertionError(f"inputs {late} end after t0 = {t0.isoformat()}.")
-        if by_id.at[int(sample["target_segment"]), "start_utc"] <= t0:
+        target_start = by_id.at[int(sample["target_segment"]), "start_utc"]
+        if target_start <= t0:
             raise AssertionError(f"target {sample['target_segment']} starts at or before t0.")
+        mid_after = sample.get("input_mid_after_segment")
+        if mid_after is not None and not pd.isna(mid_after):
+            if by_id.at[int(mid_after), "end_utc"] >= target_start:
+                raise AssertionError(f"mid_after {int(mid_after)} ends at or after the target.")
 
 
 __all__ = [

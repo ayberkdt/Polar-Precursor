@@ -108,6 +108,7 @@ Eksik olan: B3t'nin iki tanımıyla sonuç (bugün tek tanım: aynı geçişin o
 | 2 | ~~Sürücü işlevi~~ `design/drivers.py` `CombinedDrivers` (OMNI + GFZ + Hp30 + Dst; L1 boşluğunda NaN + `solar_wind_available` bayrağı) | — |
 | 3 | Pilot koşusu: 30 fırtına, CHAMP 2001-05..2005-12; önce CHAMP 2001-2005 indirme (onay) | `07`, `01` |
 | 4 | Ön kayıt belgesi → `configs/pilot.toml` güncellemesi, 9. madde pilottan sonra | `07` |
+| 3a | ~~B3t ikinci tanımı~~ 6 Eki gece: `input_mid_after_segment` (kutup geçişinden sonraki ilk orta enlem parçası, hedeften önce biter; `passes._mid_after`), tasarımda `mid_after` + `mid_after_lead_h`, merdivende `B3t2`, ikincil çiftlerde B3t2→M; `DESIGN_VERSION = 3`; sızıntı denetimi bu girdiyi t0 kuralından muaf tutar ama hedef başlangıcıyla sınırlar | ön kayıt madde 15 |
 | 3b | Pilot koşusu artık tek komutluk: `build_dataset` → `run_experiment` → `gate_report`; eksik olan veri | `01` |
 | 5 | Gradient boosting basamağı (ana plan "Model sınıfı" 2); bugün yalnız ridge | — |
 | 6 | Diebold-Mariano / Clark-West ikincil testleri; koşullu karşılıklı bilgi eki (isteğe bağlı) | — |

@@ -106,6 +106,9 @@ def synthetic_design(config: SyntheticConfig, *, seed: int) -> pd.DataFrame:
                 row[f"polar_north_lag{k}"] = float(p_north[t - k + 1])
                 row[f"polar_south_lag{k}"] = float(p_south[t - k + 1])
             row["mid_same"] = float(mid[t])
+            # second B3t definition: a mid-latitude value one cadence fresher than t0
+            row["mid_after"] = float(0.5 * x[t + 1] + rng.normal(0.0, config.noise_sd))
+            row["mid_after_lead_h"] = (lead - 1) * CADENCE_MIN / 60.0
             for k in range(config.n_driver_lags):
                 row[f"drv_d_lag{k}"] = float(d[t - k])
             row["drv_oracle_d_target"] = float(d[t + lead])

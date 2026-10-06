@@ -80,7 +80,7 @@ class PrimaryTest:
 class ExperimentConfig:
     name: str = "pilot"
     description: str = ""
-    ladder: tuple[str, ...] = ("B0", "B1", "B2", "D", "B3", "B3k", "B3t", "M")
+    ladder: tuple[str, ...] = ("B0", "B1", "B2", "D", "B3", "B3k", "B3t", "B3t2", "M")
     storms: StormSelection = field(default_factory=StormSelection)
     samples: SampleSelection = field(default_factory=SampleSelection)
     cv: CrossValidation = field(default_factory=CrossValidation)

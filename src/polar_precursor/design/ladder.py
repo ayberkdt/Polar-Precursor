@@ -9,7 +9,9 @@ A design frame has one row per forecast sample and these column families:
 ``low_other_lag1 …``        last passes of the other sector
 ``polar_north_lag1 … N``    last N northern polar passes, most recent first
 ``polar_south_lag1 … N``    last N southern polar passes
-``mid_same``                mid-latitude (40-55°) mean from the pass ending at t0
+``mid_same``                mid-latitude (40-55°) mean from the pass ending at t0 (B3t)
+``mid_after``, ``mid_after_lead_h``  first mid-latitude segment after the polar pass, ending
+                            before the target: fresher than the polar pass (B3t2)
 ``drv_*``                   driver features known at t0 (layer A, causal)
 ``drv_oracle_*``            driver features up to the target time (B3k only)
 ``geo_*``                   geometry: lead time, target local time, day of year, altitude
@@ -49,6 +51,7 @@ class Family(str, Enum):
     LOW = "low"
     POLAR = "polar"
     MID = "mid"
+    MID_AFTER = "mid_after"
     DRIVERS = "drivers"
     ORACLE = "oracle"
     GEOMETRY = "geometry"
@@ -58,6 +61,7 @@ _PREFIX: dict[Family, tuple[str, ...]] = {
     Family.LOW: ("low_",),  # low_lag*, low_same_lag*, low_other_lag*
     Family.POLAR: ("polar_north_lag", "polar_south_lag"),
     Family.MID: ("mid_same",),
+    Family.MID_AFTER: ("mid_after",),
     Family.DRIVERS: ("drv_",),
     Family.ORACLE: ("drv_oracle_",),
     Family.GEOMETRY: ("geo_",),
@@ -105,6 +109,11 @@ LADDER: dict[str, ModelSpec] = {
         "B3t",
         (Family.LOW, Family.DRIVERS, Family.MID, Family.GEOMETRY),
         question="freshness control: mid-latitude from the same pass",
+    ),
+    "B3t2": ModelSpec(
+        "B3t2",
+        (Family.LOW, Family.DRIVERS, Family.MID_AFTER, Family.GEOMETRY),
+        question="freshness control, second definition: mid-latitude after the polar pass",
     ),
     "M": ModelSpec(
         "M",

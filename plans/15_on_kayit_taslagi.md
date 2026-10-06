@@ -12,7 +12,7 @@ Hazırlanma: 6 Ekim 2026, pilot sonrası (`14`). Kaynak: `07` "Ön kayıt belges
 | H2 | Kazanç 105-195 dk kutularında en yüksektir | betimsel | pilot: evet; 60-105 dk'da kazanç yok |
 | H3 | Kazanç fırtına şiddetiyle değişir | iki yönlü (literatür çelişkili, `06`) | pilot: aşırı/şiddetlide büyük, zayıfta sıfır |
 | H4 | B3 (kendi geçmişi + sürücüler), D'den (yalnız sürücüler) 1-4 saatte belirgin iyidir | tek yönlü | pilot: +56 % |
-| H1b (pilotta doğan ek soru) | M'nin kazancı kutba özgüdür: M, B3t'yi (aynı tazelikte orta enlem) geçer | tek yönlü | pilot: +2,9 % [+0,8, +5,8]; eşik %3'ün altında |
+| H1b (pilotta doğan ek soru) | M'nin kazancı kutba özgüdür: M, B3t'nin iki tanımını da geçer | tek yönlü | pilot: (a) +2,9 % [+0,8, +5,8], (b) +3,6 % [+0,6, +7,3] |
 
 ## B. Sabitlenecek kararlar
 
@@ -32,7 +32,7 @@ Hazırlanma: 6 Ekim 2026, pilot sonrası (`14`). Kaynak: `07` "Ön kayıt belges
 | 12 | Çapraz doğrulama | Dış 10 kat, gruplar epok sırasına göre dönüşümlü; iç 5 kat; tampon 57 sa (küme kuralı); fırtına dışı tahminler | `07`; pilotta tampon ihlali yok | ☐ |
 | 13 | Çoklu test | Birincil test tek (havuz). Öngörü kutusu başına 5 test ikincil, Holm; ayrıştırmalar (evre, sınıf, yerel zaman, mevsim, yarımküre, uydu) keşif etiketli | `00` "Çoklu test" | ☐ |
 | 14 | Sürücüsüz örnekler (OMNI boşluğu) | Birincil testte: eğitim ortalamasıyla doldurma + `solar_wind_available` bayrağı **değil**; birincil havuz yalnız sürücü kapsamı olan örnekler; sürücüsüz örnekler ayrı ikincil analiz | Pilotta satırların %22'sinde L1 eksik; en büyük iki fırtınanın ana evresi sürücüsüz (`02`) | ☐ |
-| 15 | B3t tanımı | İki tanım da raporlanır: (a) t0'dan önceki son orta enlem parçası (M'den birkaç dk bayat), (b) t0 orta enlem parçasının bitişine kaydırılmış (M'den taze). H1b için eşik: M her ikisini de ≥ %3 geçerse "kutba özgü" | `04` satır 105; pilot (a) ile +2,9 % | ☐ |
+| 15 | B3t tanımı | İki tanım da raporlanır: (a) t0'dan önceki son orta enlem parçası (M'den birkaç dk bayat), (b) t0 orta enlem parçasının bitişine kaydırılmış (M'den taze). H1b için eşik: M her ikisini de ≥ %3 geçerse "kutba özgü" | `04` satır 105; pilot: (a) +2,9 % [+0,8, +5,8], (b) +3,6 % [+0,6, +7,3]; daha taze (b) daha az yararlı → tazelik tek başına açıklamıyor (`14` koşu 4) | ☐ |
 | 16 | Epok | Rahatsızlık zamanı Richardson-Cane; ana evre başlangıcı kural 2 (`05`); duyarlılık ±30 dk ikincil | `05` | ☐ |
 | 17 | Pilot fırtınaları | Ana havuzda kalır; pilot sonucu keşif etiketli; ön kayıt sonrası aynı 2001-2005 verisi yeniden koşulur ve o koşu doğrulayıcıdır | `07` | ☐ |
 

@@ -1,0 +1,19 @@
+Denetimler, 2026-10-06T07:45:41Z — bolutleme, QD, 5 dk OMNI, JB2008 capraz kontrol sonrasi
+== ruff check src tests examples
+All checks passed!
+== mypy
+Success: no issues found in 32 source files
+== lint-imports
+
+Contracts: 1 kept, 0 broken.
+== pytest (proje ortami)
+91 passed, 1 skipped in 10.52s
+== pytest (Sidera ortami, Python 3.10)
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_catalog.py:27: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_catalog.py:47: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_catalog.py:57: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_catalog.py:90: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_density_and_heating.py:23: could not import 'cdflib': No module named 'cdflib'
+SKIPPED [1] tests\test_omni_5min_and_magnetic.py:34: could not import 'apexpy': No module named 'apexpy'
+87 passed, 6 skipped in 7.41s

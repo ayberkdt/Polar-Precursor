@@ -1,0 +1,10 @@
+Sidera cekim ayari: GravityConfig(file_path='point_mass', degree=0, use_mmap=True, backend='classic_sh', st_lrps_model_dir='', adaptive=AdaptiveDegreeConfig(enabled=False, power=2.5, min_degree=0, quantization_step=10, altitude_table=None, policy='table', tail_fraction=0.001, budget_beta=1.0, kaula_exponent=1.759))
+kosu suresi: referans 0.7 s, +%20 0.3 s (4 sa yayilim, 60 s cikti)
+rhs yolu: body_ephemeris_python | cikti noktasi: 241
+hiz 7674.5 m/s, a_drag 5.619e-07 m/s^2
+t [sa]  olculen [m]   formul [m]     oran   radyal [m]
+  1.00         1.62         2.18    0.740       -0.851
+  2.00         8.23         8.74    0.942       -1.251
+  3.00        19.53        19.66    0.993       -2.190
+  4.00        34.09        34.95    0.975       -2.950
+Isaret: pozitif = daha yogun atmosferdeki uydu referansin ilerisinde (yorunge alcalir, hizlanir).

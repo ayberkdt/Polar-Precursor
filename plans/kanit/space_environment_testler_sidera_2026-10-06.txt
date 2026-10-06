@@ -1,0 +1,10 @@
+pytest, Sidera ortami (Python 3.10), 2026-10-06T06:45:26Z
+ssss.......s............................................................ [ 94%]
+....                                                                     [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_catalog.py:27: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_catalog.py:47: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_catalog.py:57: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_catalog.py:90: could not import 'openpyxl': No module named 'openpyxl'
+SKIPPED [1] tests\test_density_and_heating.py:23: could not import 'cdflib': No module named 'cdflib'
+71 passed, 5 skipped in 6.88s

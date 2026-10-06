@@ -1,0 +1,76 @@
+% Draft BibTeX records for Sidera's references/references.bib
+% (rules: one persistent identifier per record; metadata verified against the
+% landing page before adding). Status per record is stated in a comment.
+% Emmert2021NRLMSIS2 already exists in Sidera's bibliography.
+
+% Liu et al. 2010 — DOI from the journal (Annales Geophysicae 28, 1633-1649);
+% article text not reopened in this project (see registry notes).
+@article{Liu2010ThermosphereDensityEm,
+  author  = {Liu, R. and L{\"u}hr, H. and Doornbos, E. and Ma, S.-Y.},
+  title   = {Thermospheric Mass Density Variations During Geomagnetic Storms and
+             a Prediction Model Based on the Merging Electric Field},
+  journal = {Annales Geophysicae},
+  volume  = {28},
+  number  = {9},
+  pages   = {1633--1649},
+  year    = {2010},
+  doi     = {10.5194/angeo-28-1633-2010}
+}
+
+% Newell et al. 2007 — DOI only; content pending.
+@article{Newell2007CouplingFunction,
+  author  = {Newell, P. T. and Sotirelis, T. and Liou, K. and Meng, C.-I. and Rich, F. J.},
+  title   = {A Nearly Universal Solar Wind-Magnetosphere Coupling Function Inferred
+             from 10 Magnetospheric State Variables},
+  journal = {Journal of Geophysical Research: Space Physics},
+  volume  = {112},
+  number  = {A1},
+  pages   = {A01206},
+  year    = {2007},
+  doi     = {10.1029/2006JA012015}
+}
+
+% Oliveira and Zesta 2019 — arXiv text read 2026-10-05; journal DOI to be
+% confirmed on the Space Weather landing page before merge.
+@article{OliveiraZesta2019SatelliteDragStorms,
+  author  = {Oliveira, Denny M. and Zesta, Eftyhia},
+  title   = {Satellite Orbital Drag During Magnetic Storms},
+  journal = {Space Weather},
+  volume  = {17},
+  number  = {11},
+  pages   = {1510--1533},
+  year    = {2019},
+  doi     = {10.1029/2019SW002287}
+}
+
+% SET SOLFSMY data product — official URL identifier; header read 2026-10-06.
+@dataset{SET2026SOLFSMY,
+  title       = {{JB2008} Solar Indices {F10}, {S10}, {M10}, {Y10} ({SOLFSMY.TXT}), data release 8\_1\_0},
+  institution = {Space Environment Technologies},
+  year        = {2026},
+  url         = {https://sol.spacenvironment.net/JB2008/indices/SOLFSMY.TXT}
+}
+
+% GFZ Kp data product — citation from the file header (read 2026-10-06).
+@article{Matzka2021GeomagneticKp,
+  author  = {Matzka, J{\"u}rgen and Stolle, Claudia and Yamazaki, Yosuke and Bronkalla, Oliver and Morschhauser, Achim},
+  title   = {The Geomagnetic {Kp} Index and Derived Indices of Geomagnetic Activity},
+  journal = {Space Weather},
+  volume  = {19},
+  number  = {5},
+  pages   = {e2020SW002641},
+  year    = {2021},
+  doi     = {10.1029/2020SW002641}
+}
+
+% Weimer et al. 2023 data archive — DOI and description from the Zenodo ReadMe
+% (read 2026-10-06).
+@article{Weimer2023PolarHeatingTimeDelays,
+  author  = {Weimer, Daniel R. and Mehta, Piyush M. and Licata, R. J. and Tobiska, W. Kent},
+  title   = {Global Variations in the Time Delays Between Polar Ionospheric Heating
+             and the Neutral Density Response},
+  journal = {Space Weather},
+  volume  = {21},
+  year    = {2023},
+  doi     = {10.1029/2022SW003410}
+}

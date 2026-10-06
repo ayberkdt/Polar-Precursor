@@ -1,0 +1,417 @@
+# Draft registry entries for Sidera's docs/algorithms/algorithm_registry.yaml
+# (schema: schemas/algorithm_registry.schema.json, read 2026-10-06).
+#
+# NOT validated with tools/algorithm_registry.py (that tool lives in Sidera;
+# this repository does not run it). Ids use the next free numbers as of
+# 2026-10-06 (ATM-005 and MAG entries exist; check again on merge day).
+# verification_status values are honest about what was read in this project;
+# nothing is marked verified_primary_source unless the defining text was read.
+# HEUR entries carry no citation, as the policy allows.
+
+entries:
+  - id: SIDERA-ALG-ATM-006
+    slug: nrlmsis_index_conventions
+    canonical_name: >-
+      NRLMSIS driver conventions: previous-day F10.7, centred 81-day mean F10.7,
+      and the seven-slot Ap array (daily, current 3-hourly, -3 h, -6 h, -9 h,
+      mean of 12-33 h prior, mean of 36-57 h prior)
+    category: standard
+    domain: ATM
+    status: active
+    added: "2026-10-06"
+    implementation_class: standard_implementation
+    verification_status: verified_secondary_source
+    scientific_status: implemented_and_tested
+    citation_keys:
+      - Emmert2021NRLMSIS2
+    primary_reference:
+      type: article
+      citation_key: Emmert2021NRLMSIS2
+      identifier_kind: doi
+      doi: 10.1029/2020EA001321
+      isbn: null
+      report_number: null
+      standard_number: null
+      official_url: https://github.com/SWxTREC/pymsis
+      edition: null
+      chapter: null
+      section: null
+      equations: []
+      pages: null
+      verification_notes: >-
+        Slot indexing was read from the installed pymsis 0.13.0 utils.py (the
+        wrapper's own index-array construction), not from the NRLMSIS paper;
+        hence secondary. Checked on real GFZ rows: the Ap history for
+        2003-10-29 07:04 UT, derived by hand from the eight 3-hourly ap values
+        of 27-29 October, is (400, 27, 39, 27, 22.0, 13.5) and the code
+        reproduces it. With every slot at 4 NRLMSIS 2.1 returned exactly the
+        density it gives with its geomagnetic switches off (measured 2026-10-05
+        on CHAMP tracks), which fixes the quiet reference definition.
+    symbols:
+      - path: src/sidera/physics/atmosphere/space_weather.py
+        symbol: nrlmsis_ap_history
+        role: cpu_implementation
+      - path: src/sidera/physics/atmosphere/space_weather.py
+        symbol: centred_mean_f107
+        role: cpu_implementation
+      - path: src/sidera/physics/atmosphere/space_weather.py
+        symbol: GfzSpaceWeatherProvider
+        role: api_entry_point
+    mathematical_contract:
+      inputs: GFZ daily Kp/ap/F10.7 table, UTC epoch
+      outputs: SpaceWeatherState with f107 (previous day), f107a (centred 81-day), ap_history (6 slots)
+      exact_or_approximate: exact
+      preserved_properties:
+        - a missing index raises; nothing is substituted
+        - the quiet reference (Ap = 4 in every slot) equals the model's geomagnetic switch-off
+    assumptions:
+      - GFZ observed (not adjusted) F10.7 is the model input, as the GFZ header recommends
+    limitations:
+      - the centred mean needs 40 days after the epoch; near real time it does not exist
+    validation:
+      - tests/physics/test_space_weather_conventions.py
+    see_also:
+      - SIDERA-MODEL-ATM-003
+    notes: >-
+      Closes the gap noted on SIDERA-MODEL-ATM-003 ("storm-time mode needs a
+      3-hourly Ap history the provider may not have").
+
+  - id: SIDERA-ALG-MAG-002
+    slug: merging_electric_field
+    canonical_name: >-
+      Solar-wind merging (reconnection) electric field Em = v B_T sin^2(theta/2)
+    category: physical_model
+    domain: MAG
+    status: active
+    added: "2026-10-06"
+    implementation_class: standard_implementation
+    verification_status: verified_secondary_source
+    scientific_status: implemented_and_tested
+    citation_keys:
+      - Liu2010ThermosphereDensityEm
+    primary_reference:
+      type: article
+      citation_key: Liu2010ThermosphereDensityEm
+      identifier_kind: doi
+      doi: 10.5194/angeo-28-1633-2010
+      isbn: null
+      report_number: null
+      standard_number: null
+      official_url: null
+      edition: null
+      chapter: null
+      section: null
+      equations: []
+      pages: "1633-1649"
+      verification_notes: >-
+        The form v*B_T*sin^2(theta/2) in mV/m (v in km/s, B in nT, factor 1e-3)
+        is taken from Liu et al. 2010, which attributes it to Kan and Lee 1979;
+        the Kan and Lee original was not read in this project. Analytic limits
+        are pinned in tests: purely southward IMF gives v|Bz|e-3, purely
+        northward gives 0, dawn-dusk gives half. The saturated form
+        s*Em/sqrt(s^2+Em^2) with s = 8 mV/m follows Liu et al. Eq. (4) as
+        recorded in the module docstring (equation number from an earlier
+        session's reading; re-check on merge day).
+    symbols:
+      - path: src/sidera/physics/space_environment/coupling.py
+        symbol: merging_electric_field_mv_m
+        role: cpu_implementation
+      - path: src/sidera/physics/space_environment/coupling.py
+        symbol: saturated_merging_field_mv_m
+        role: cpu_implementation
+    mathematical_contract:
+      inputs: flow speed (km/s), By and Bz in GSM (nT)
+      outputs: Em in mV/m (NaN propagates)
+      exact_or_approximate: exact
+      preserved_properties:
+        - non-negative; zero for purely northward IMF
+    assumptions:
+      - GSM components; OMNI's bow-shock-nose time shift already applied
+    limitations:
+      - the (1 - Bz/B_T)/2 form cancels near northward IMF (relative error ~1e-11, measured)
+    validation:
+      - tests/physics/test_space_environment_coupling.py
+    see_also: []
+    notes: ""
+
+  - id: SIDERA-ALG-MAG-003
+    slug: newell_coupling_function
+    canonical_name: >-
+      Newell et al. (2007) coupling function v^(4/3) B_T^(2/3) sin^(8/3)(theta/2)
+    category: physical_model
+    domain: MAG
+    status: active
+    added: "2026-10-06"
+    implementation_class: standard_implementation
+    verification_status: identifier_verified_content_pending
+    scientific_status: implemented_and_tested
+    citation_keys:
+      - Newell2007CouplingFunction
+    primary_reference:
+      type: article
+      citation_key: Newell2007CouplingFunction
+      identifier_kind: doi
+      doi: 10.1029/2006JA012015
+      isbn: null
+      report_number: null
+      standard_number: null
+      official_url: null
+      edition: null
+      chapter: null
+      section: null
+      equations: []
+      pages: null
+      verification_notes: >-
+        Formula taken from secondary sources only; the 2007 JGR paper was not
+        opened in this project. The DOI is the journal's. Must be read before
+        this entry is promoted; until then the symbol's docstring says so.
+    symbols:
+      - path: src/sidera/physics/space_environment/coupling.py
+        symbol: newell_coupling
+        role: cpu_implementation
+    mathematical_contract:
+      inputs: flow speed (km/s), By and Bz in GSM (nT)
+      outputs: dimensionless coupling value in the units implied by the inputs
+      exact_or_approximate: exact
+      preserved_properties:
+        - zero for purely northward IMF
+    assumptions: []
+    limitations:
+      - units of the published function not confirmed against the original
+    validation:
+      - tests/physics/test_space_environment_coupling.py
+    see_also:
+      - SIDERA-ALG-MAG-002
+    notes: ""
+
+  - id: SIDERA-ALG-MAG-004
+    slug: exponential_memory_integral
+    canonical_name: >-
+      Exponentially weighted causal time integral of a solar-wind driver
+      (Liu et al. 2010 time-weighted mean)
+    category: numerical_algorithm
+    domain: MAG
+    status: active
+    added: "2026-10-06"
+    implementation_class: standard_implementation
+    verification_status: pending_verification
+    scientific_status: implemented_and_tested
+    citation_keys:
+      - Liu2010ThermosphereDensityEm
+    primary_reference:
+      type: article
+      citation_key: Liu2010ThermosphereDensityEm
+      identifier_kind: doi
+      doi: 10.5194/angeo-28-1633-2010
+      isbn: null
+      report_number: null
+      standard_number: null
+      official_url: null
+      edition: null
+      chapter: null
+      section: null
+      equations:
+        - "8"
+      pages: "1633-1649"
+      verification_notes: >-
+        The equation number (8) and tau = 3 h come from an earlier session's
+        notes; the PDF was not reopened in this project, so the status stays
+        pending. The implementation is pinned independently: step response
+        matches the closed form, a later sample never changes an earlier
+        output (causality test), and output is withheld when less than half the
+        full weight is present.
+    symbols:
+      - path: src/sidera/physics/space_environment/memory.py
+        symbol: exponential_memory
+        role: cpu_implementation
+    mathematical_contract:
+      inputs: regularly sampled series with NaN gaps, step and time constant in seconds
+      outputs: causal weighted mean per sample
+      exact_or_approximate: exact
+      preserved_properties:
+        - strictly causal
+        - missing samples carry no weight
+    assumptions: []
+    limitations:
+      - min_weight_fraction = 0.5 is this project's choice
+    validation:
+      - tests/physics/test_space_environment_memory.py
+    see_also:
+      - SIDERA-ALG-MAG-002
+    notes: ""
+
+  - id: SIDERA-ALG-MAG-005
+    slug: storm_intensity_by_min_symh
+    canonical_name: >-
+      Geomagnetic storm intensity classes by minimum SYM-H (weak >= -50 nT,
+      moderate [-100, -50), strong [-150, -100), severe [-250, -150), extreme < -250)
+    category: standard
+    domain: MAG
+    status: active
+    added: "2026-10-06"
+    implementation_class: standard_implementation
+    verification_status: verified_primary_source
+    scientific_status: implemented_and_tested
+    citation_keys:
+      - OliveiraZesta2019SatelliteDragStorms
+    primary_reference:
+      type: article
+      citation_key: OliveiraZesta2019SatelliteDragStorms
+      identifier_kind: doi
+      doi: 10.1029/2019SW002287
+      isbn: null
+      report_number: null
+      standard_number: null
+      official_url: https://arxiv.org/abs/1910.09622
+      edition: null
+      chapter: null
+      section: null
+      equations: []
+      pages: null
+      verification_notes: >-
+        Boundaries and operators read 2026-10-05 from Table 1 of the arXiv
+        version (1910.09622); the authors call the intervals arbitrary. The
+        companion GRL paper (Zesta and Oliveira 2019, doi:10.1029/2019GL085120)
+        uses strict inequalities on both sides. The journal DOI above is the
+        Space Weather article's; the arXiv text is what was read.
+    symbols:
+      - path: src/sidera/physics/space_environment/storms.py
+        symbol: classify_by_min_symh
+        role: cpu_implementation
+    mathematical_contract:
+      inputs: minimum SYM-H of the event (nT)
+      outputs: one of five classes
+      exact_or_approximate: exact
+      preserved_properties: []
+    assumptions: []
+    limitations:
+      - class limits are a convention, not a physical threshold
+    validation:
+      - tests/physics/test_space_environment_storms.py
+    see_also: []
+    notes: ""
+
+  - id: SIDERA-HEUR-MAG-001
+    slug: main_phase_onset_rule
+    canonical_name: >-
+      Automatic storm zero-epoch: sharp southward turning of IMF Bz leading into
+      the first interval at least 0.7 times the window's deepest Bz
+    category: standard
+    domain: MAG
+    status: active
+    added: "2026-10-06"
+    implementation_class: heuristic
+    verification_status: unverifiable
+    scientific_status: experimental
+    citation_keys: []
+    primary_reference: null
+    symbols:
+      - path: src/sidera/physics/space_environment/storms.py
+        symbol: find_main_phase_onset
+        role: cpu_implementation
+    mathematical_contract:
+      inputs: 1-minute Bz (GSM) series, seed time (e.g. ICME disturbance time)
+      outputs: onset time or a stated failure (no_turning, insufficient_data)
+      exact_or_approximate: heuristic
+      preserved_properties:
+        - insufficient data is reported, never silently treated as no storm
+    assumptions:
+      - OMNI-style regular sampling with NaN gaps
+    limitations:
+      - relative depth 0.7 was chosen on five published onsets (calibration, not validation)
+    validation:
+      - tests/physics/test_space_environment_storms.py
+    see_also:
+      - SIDERA-ALG-MAG-005
+    notes: >-
+      Replaces the visual pick of Zesta and Oliveira (2019) with a stated rule;
+      five events within 7 minutes of the published times (plans/kanit).
+
+  - id: SIDERA-HEUR-MAG-002
+    slug: solar_wind_shock_candidate_rule
+    canonical_name: >-
+      Interplanetary shock candidate: simultaneous rise of the 10-minute medians
+      of flow speed (>= 40 km/s), |B| (>= 1.3x) and proton density (>= 1.3x)
+    category: standard
+    domain: MAG
+    status: active
+    added: "2026-10-06"
+    implementation_class: heuristic
+    verification_status: unverifiable
+    scientific_status: experimental
+    citation_keys: []
+    primary_reference: null
+    symbols:
+      - path: src/sidera/physics/space_environment/shock.py
+        symbol: detect_shocks
+        role: cpu_implementation
+    mathematical_contract:
+      inputs: 1-minute OMNI frame (speed, |B|, density)
+      outputs: candidate times with the minute at which each becomes known
+      exact_or_approximate: heuristic
+      preserved_properties:
+        - a candidate is only usable as a forecast input after its confirmation time
+    assumptions: []
+    limitations:
+      - thresholds tuned on four Richardson-Cane disturbances; misses events with plasma gaps
+    validation:
+      - tests/physics/test_space_environment_shock.py
+    see_also: []
+    notes: ""
+
+  - id: SIDERA-DATA-ATM-001
+    slug: jb2008_solar_index_lags
+    canonical_name: >-
+      JB2008 solar-index input convention: F10 and S10 lagged 1 day, M10 2 days,
+      Y10 5 days, 81-day centred means with the same lags (SET SOLFSMY)
+    category: standard
+    domain: DATA
+    status: active
+    added: "2026-10-06"
+    implementation_class: standard_implementation
+    verification_status: verified_primary_source
+    scientific_status: implemented_and_tested
+    citation_keys:
+      - SET2026SOLFSMY
+    primary_reference:
+      type: dataset
+      citation_key: SET2026SOLFSMY
+      identifier_kind: official_url
+      doi: null
+      isbn: null
+      report_number: null
+      standard_number: null
+      official_url: https://sol.spacenvironment.net/JB2008/indices/SOLFSMY.TXT
+      edition: null
+      chapter: null
+      section: "file header, release 8_1_0"
+      equations: []
+      pages: null
+      verification_notes: >-
+        Read 2026-10-06 from the file header: values reported in sfu at 12 UT
+        and to be used as daily values; "F10 and S10 are 1-day lagged, M10 is
+        2-day, and Y10 is 5-day lagged in JB2008; the 81-day centered values
+        are used with the same respective lag times". The DTCFILE companion
+        has no header; its unit (K) and hour mapping are NOT verified and the
+        reader's docstring says so.
+    symbols:
+      - path: src/sidera/physics/atmosphere/space_weather.py
+        symbol: jb2008_solar_inputs
+        role: cpu_implementation
+      - path: src/sidera/io/space_weather/set_jb2008.py
+        symbol: read_solfsmy
+        role: api_entry_point
+    mathematical_contract:
+      inputs: SOLFSMY daily table, UTC epoch
+      outputs: F10, F10B, S10, S10B, M10, M10B, Y10, Y10B for the epoch
+      exact_or_approximate: exact
+      preserved_properties:
+        - a spline-filled or missing index (source flag 0) raises
+    assumptions: []
+    limitations:
+      - no JB2008 atmosphere adapter exists yet; this is input preparation only
+    validation:
+      - tests/io/test_space_weather_set_jb2008.py
+    see_also:
+      - SIDERA-MODEL-ATM-003
+    notes: ""

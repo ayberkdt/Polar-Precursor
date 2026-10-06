@@ -1,0 +1,9 @@
+pymsis 0.13.0
+Variable: [('MASS_DENSITY', 0), ('N2', 1), ('O2', 2), ('O', 3), ('HE', 4), ('H', 5), ('AR', 6), ('N', 7), ('ANOMALOUS_O', 8), ('NO', 9), ('TEMPERATURE', 10)]
+shape (100000, 11) sure 6.51 s -> 15358 nokta/s
+anahtar kapali(ap=4) / ap=4                ln-oran ort +0.00000  maks|.| 0.00000
+anahtar kapali(ap=80) / anahtar kapali(ap=4) ln-oran ort +0.00000  maks|.| 0.00000
+ap=80 gunluk / ap=4                        ln-oran ort +0.33624  maks|.| 0.48101
+ap=80 firtina kipi / ap=4                  ln-oran ort +0.36746  maks|.| 0.48726
+MSIS2.0 / MSIS2.1 (ap=4)                   ln-oran ort +0.00000  maks|.| 0.00000
+MSISE-00 / MSIS2.1 (ap=4)                  ln-oran ort +0.16254  maks|.| 0.22850

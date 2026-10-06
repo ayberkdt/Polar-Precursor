@@ -1,0 +1,11 @@
+pytest, proje ortami (Python 3.12), 2026-10-06T06:45:14Z
+........................................................................ [ 97%]
+..                                                                       [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_sidera_bridge.py:10: Sidera is not importable here
+74 passed, 1 skipped in 8.79s
+
+ruff check:
+All checks passed!
+mypy:
+Success: no issues found in 30 source files

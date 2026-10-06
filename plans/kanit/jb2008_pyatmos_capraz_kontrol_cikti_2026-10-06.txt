@@ -1,0 +1,18 @@
+pyatmos dosyasi: D:\Masaustu\Polar Precursor\.venv\Lib\site-packages\pyatmos
+
+(1) Gecikmeli gunes indeksleri, uc epok:
+  2003-10-30T07:04:00+00:00  pyatmos [279.1, 140.3, 155.1, 126.7, 175.6, 132.6, 168.0, 140.9]  bizim [279.1, 140.3, 155.1, 126.7, 175.6, 132.6, 168.0, 140.9]  ayni: True
+  2005-05-15T02:38:00+00:00  pyatmos [99.5, 94.5, 106.1, 98.9, 97.0, 93.9, 121.5, 103.3]  bizim [99.5, 94.5, 106.1, 98.9, 97.0, 93.9, 121.5, 103.3]  ayni: True
+  2015-06-01T12:00:00+00:00  pyatmos [94.3, 121.9, 107.2, 129.9, 111.7, 131.4, 115.6, 137.8]  bizim [94.3, 121.9, 107.2, 129.9, 111.7, 131.4, 115.6, 137.8]  ayni: True
+  eslesmeyen epok sayisi: 0
+
+(2) DTCFILE saat eslemesi:
+  pyatmos Const.x ilk degerler (gun kesri): [0.02083333 0.0625     0.10416667] ... adim 0.04166666666666667 => k. deger k:30 UT'de gecerli, aralar dogrusal
+  07:04 UT: pyatmos (icdegerlenmis) 220.27; bizim saat degeri (07:00-08:00) 209.0; bizim icdegerlenmis 220.27
+  Kernel imzasi: (AMJD, YRDAY, SUN, SAT, F10, F10B, S10, S10B, M10, M10B, Y10, Y10B, DSTDTC)
+  Kernel belgesinde DSTDTC: DSTDTC): ''' Jacchia-Bowman 2008 Model Atmosphere This is the CIRA "Integration Form" of a Jacchia Model. There are no tabular values of densit
+
+(3) Adaptor icin uygunluk:
+  pyatmos/__init__.py IERS verisini ice aktarma sirasinda yukluyor: True
+  Sonuc: kernel (JB2008_subfunc.JB2008, numba) dogrudan cagrilabilir; ama paket ice aktarmasi ag istiyor.
+  Sidera ilkesi (ag yok) icin kernel ayri paketlenmeli ya da pyatmos cevrimdisi kipte dogrulanmali.

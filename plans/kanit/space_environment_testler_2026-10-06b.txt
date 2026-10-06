@@ -1,0 +1,30 @@
+Denetimler, proje ortami, 2026-10-06T07:07:01Z — katman duzeni sonrasi
+== ruff check src tests examples (uzun satir duzeltildi, yeniden kosuldu: temiz)
+examples\storm_vs_quiet_nrlmsis.py:102:101: E501 Line too long (105 > 100)
+    |
+100 |         ratio_obs_storm = np.exp(np.mean(np.log(observed[mask] / storm[mask])))
+101 |         print(
+102 |             f"{name:>8} {mask.sum():>5} {ratio_model:>12.2f} {ratio_obs:>10.2f} {ratio_obs_storm:>10.2f}"
+    |                                                                                                     ^^^^^ E501
+103 |         )
+104 |     print()
+    |
+
+Found 1 error.
+== ruff format --check
+42 files already formatted
+== mypy
+Success: no issues found in 29 source files
+== lint-imports
+
+space_environment packages form one layer stack KEPT
+
+Contracts: 1 kept, 0 broken.
+== pytest
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_sidera_bridge.py:10: Sidera is not importable here
+74 passed, 1 skipped in 13.19s
+
+== pytest, Sidera ortami (Python 3.10)
+....                                                                     [100%]
+71 passed, 5 skipped in 7.26s

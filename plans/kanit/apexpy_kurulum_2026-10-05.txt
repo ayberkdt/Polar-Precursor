@@ -1,0 +1,28 @@
+apexpy Windows kurulum denemesi — 5 Eki 2026
+Ortam: atilabilir sanal ortam D:\tmp\pp_apex_test (uv 0.11.28, Python 3.12.1), derleyici C:\Strawberry\c\bin (gfortran/gcc 13.2.0, MinGW-W64 ucrt)
+
+Deneme 1: uv pip install apexpy
+  SONUC: BASARISIZ. meson.build:133 "Include dir <derleme ortami>\include does not exist."
+Deneme 2: numpy, meson-python, meson, ninja kurulu; uv pip install apexpy --no-build-isolation
+  SONUC: BASARISIZ. Ayni hata: "Include dir D:\tmp\pp_apex_test\include does not exist."
+  Neden: uv'nin olusturdugu sanal ortamda include dizini yok; apexpy'nin meson betigi <onek>\include bekliyor.
+Deneme 3: taban Python'un include dizini sanal ortama kopyalandi
+  (Copy-Item -Recurse C:\Users\ayber\AppData\Local\Programs\Python\Python312\include -> D:\tmp\pp_apex_test\include)
+  sonra: uv pip install apexpy --no-build-isolation
+  SONUC: BASARILI. "Built apexpy==2.1.1" (29,5 s)
+
+Calisma sinamasi (Apex(2003.8), yukseklik 400 km):
+  geo2qd(60, 15)   = (56.592, 94.305)
+  geo2qd(0, 0)     = (-11.609, 72.573)
+  geo2qd(80, -72)  = (87.327, 37.917)
+  hiz: 534035 nokta/s (100.000 rastgele nokta, tek cagri)
+  mlon2mlt calisiyor.
+
+Calisan tarif:
+  1) PATH'in basina C:\Strawberry\c\bin
+  2) uv venv <ortam> --python 3.12
+  3) uv pip install numpy meson-python meson ninja
+  4) taban Python'un include dizinini <ortam>\include olarak kopyala
+  5) uv pip install apexpy --no-build-isolation
+
+Dogrulanmayan: QD degerleri bagimsiz bir hesaplayiciyla karsilastirilmadi (yalnizca makul gorunuyorlar).

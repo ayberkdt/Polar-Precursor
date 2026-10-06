@@ -1,0 +1,60 @@
+﻿space_environment test kaydi - 5 Eki 2026
+
+=== pytest, proje ortami (.venv, Python 3.12) ===
+......................................                                   [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_sidera_bridge.py:10: Sidera is not importable here
+38 passed, 1 skipped in 17.14s
+
+=== ruff check src tests ===
+ruff 0.12.0
+All checks passed!
+
+=== mypy ===
+Success: no issues found in 16 source files
+
+=== pytest, Sidera ortami (D:\sidera\.venv, Python 3.10), PYTHONPATH=src ===
+
+tests/test_conventions_and_provider.py::test_ap_history_hand_derived PASSED [  2%]
+tests/test_conventions_and_provider.py::test_ap_history_changes_at_interval_boundary PASSED [  5%]
+tests/test_conventions_and_provider.py::test_ap_history_refuses_missing_slot PASSED [  7%]
+tests/test_conventions_and_provider.py::test_centred_mean_is_symmetric_window PASSED [ 10%]
+tests/test_conventions_and_provider.py::test_provider_applies_nrlmsis_conventions PASSED [ 12%]
+tests/test_conventions_and_provider.py::test_quiet_mode_keeps_solar_flux_and_prescribes_ap PASSED [ 15%]
+tests/test_conventions_and_provider.py::test_provider_rejects_naive_and_uncovered_epochs PASSED [ 17%]
+tests/test_gfz.py::test_daily_row_of_halloween_storm PASSED              [ 20%]
+tests/test_gfz.py::test_observed_flux_matches_web_service PASSED         [ 22%]
+tests/test_gfz.py::test_missing_values_become_none PASSED                [ 25%]
+tests/test_gfz.py::test_malformed_row_reports_line_number PASSED         [ 27%]
+tests/test_gfz.py::test_hp30_half_hour_series PASSED                     [ 30%]
+tests/test_sidera_bridge.py::test_adapter_is_a_sidera_provider PASSED    [ 32%]
+tests/test_sidera_bridge.py::test_storm_mode_nrlmsis_runs_on_measured_indices PASSED [ 35%]
+tests/test_solar_wind.py::test_hro_record_has_46_fields PASSED           [ 37%]
+tests/test_solar_wind.py::test_omni_values_of_a_known_record PASSED      [ 40%]
+tests/test_solar_wind.py::test_omni_has_no_solar_wind_during_the_halloween_main_phase PASSED [ 42%]
+tests/test_solar_wind.py::test_omni_rejects_wrong_cadence PASSED         [ 45%]
+tests/test_solar_wind.py::test_clock_angle_and_transverse_field PASSED   [ 47%]
+tests/test_solar_wind.py::test_merging_field_limits_and_units PASSED     [ 50%]
+tests/test_solar_wind.py::test_merging_field_matches_angle_form_and_propagates_nan PASSED [ 52%]
+tests/test_solar_wind.py::test_saturated_field_limits PASSED             [ 55%]
+tests/test_solar_wind.py::test_exponential_memory_is_causal_and_converges PASSED [ 57%]
+tests/test_solar_wind.py::test_exponential_memory_withholds_output_without_enough_data PASSED [ 60%]
+tests/test_solar_wind.py::test_lagged_window_means_never_read_the_future PASSED [ 62%]
+tests/test_storms.py::test_intensity_boundaries[-10.0-weak] PASSED       [ 65%]
+tests/test_storms.py::test_intensity_boundaries[-50.0-weak] PASSED       [ 67%]
+tests/test_storms.py::test_intensity_boundaries[-50.1-moderate] PASSED   [ 70%]
+tests/test_storms.py::test_intensity_boundaries[-100.0-moderate] PASSED  [ 72%]
+tests/test_storms.py::test_intensity_boundaries[-100.1-strong] PASSED    [ 75%]
+tests/test_storms.py::test_intensity_boundaries[-150.0-strong] PASSED    [ 77%]
+tests/test_storms.py::test_intensity_boundaries[-250.0-severe] PASSED    [ 80%]
+tests/test_storms.py::test_intensity_boundaries[-250.1-extreme] PASSED   [ 82%]
+tests/test_storms.py::test_intensity_boundaries[-320.0-extreme] PASSED   [ 85%]
+tests/test_storms.py::test_intensity_boundaries[-282.0-extreme] PASSED   [ 87%]
+tests/test_storms.py::test_intensity_boundaries[-490.0-extreme] PASSED   [ 90%]
+tests/test_storms.py::test_onset_found_at_first_sustained_turning PASSED [ 92%]
+tests/test_storms.py::test_weak_southward_field_is_not_an_onset PASSED   [ 95%]
+tests/test_storms.py::test_gappy_window_is_reported_as_insufficient_not_as_no_turning PASSED [ 97%]
+tests/test_storms.py::test_halloween_onset_cannot_be_determined_from_omni PASSED [100%]
+============================= 40 passed in 5.91s ==============================
+
+

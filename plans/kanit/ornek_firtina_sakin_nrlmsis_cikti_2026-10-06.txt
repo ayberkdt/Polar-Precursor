@@ -1,0 +1,15 @@
+CHAMP, 2003-10-29, NRLMSIS 2.1 storm mode, 1440 track points (60 s)
+indices at 07:04 UT: F10.7(prev day) 274.4 sfu, F10.7a 146.8 sfu, Ap 204, ap history (400.0, 27.0, 39.0, 27.0, 22.0, 13.5)
+sources: Kp_ap_Ap_SN_F107_since_1932.txt | sha256=2af3eaf78c62870cb89bc8ae203820420020c1e2a0aecfec05ed3a59d0db8b16
+         champ_track_20031029_60s.csv | sha256=b7dabbd4c16306d0aa24f58d4910a49ec3622e3ad5ba0ebaeaf052b71259ca6e
+
+    band     n  storm/quiet  obs/quiet  obs/storm
+ polar S   243         1.57       1.28       0.81
+   mid S   241         1.61       1.27       0.79
+     low   475         1.63       1.21       0.74
+   mid N   238         1.56       1.25       0.80
+ polar N   243         1.61       1.24       0.77
+
+Ratios are geometric means over the band. 'quiet' = same F10.7, Ap = 4 in every slot
+(the storm-free reference). 'obs' = accelerometer density of the ESA product.
+NRLMSIS is not ground truth; the last column is its storm-time error on this day.

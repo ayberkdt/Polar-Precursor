@@ -1,0 +1,17 @@
+iz: CH_OPER_DNS_ACC_2__20031029T000000_20031029T235959_0001.cdf | sha256=3521fa6d5e026f85a78f1533eb7ecfcee4b72928a5347ee83cd1e223aa822c6a | kayit 8640
+apexpy QD + MLT: 8640 nokta 0.21 s (40221 nokta/s); apexpy 2.1.1 quasi-dipole, monthly epochs
+|QD - cografi enlem|: ortanca 6.7 derece, en buyuk 15.5 derece
+
+[cografi enlem] 125 parca, 0.10 s; sayimlar {('low', 'both'): 31, ('mid', 'north'): 31, ('mid', 'south'): 31, ('polar', 'north'): 16, ('polar', 'south'): 16}
+   alcak enlem orta zaman araliklari: 46.0-46.3 dk; kutup parcasi suresi ortanca 13.7 dk; ulasilan en yuksek |enlem| ortanca 87.3
+   ornekler: 140 (kutup gecisi, hedef) cifti; ongoru suresi 62-247 dk; sizinti denetimi gecti (build_samples icinde)
+
+[QD enlem] 125 parca, 0.08 s; sayimlar {('low', 'both'): 31, ('mid', 'north'): 31, ('mid', 'south'): 31, ('polar', 'north'): 16, ('polar', 'south'): 16}
+   alcak enlem orta zaman araliklari: 42.6-50.0 dk; kutup parcasi suresi ortanca 13.2 dk; ulasilan en yuksek |enlem| ortanca 82.5
+   kutup gecislerinde cusp (10-14 MLT) orani: ortanca 0.31, en buyuk 0.51
+   ornekler: 138 (kutup gecisi, hedef) cifti; ongoru suresi 61-250 dk; sizinti denetimi gecti (build_samples icinde)
+
+QD bantlarinda saatlik log-yogunluk ortalamalari (29 Eki 2003, firtina ana evresi 06 UT sonrasi):
+  polar north: 00h:-26.11 03h:-26.28 06h:-25.59 09h:-25.87 12h:-25.55 15h:-25.65 18h:-25.78 21h:-25.42
+  polar south: 00h:-26.21 03h:-26.35 06h:-25.85 09h:-25.92 12h:-25.70 15h:-25.82 18h:-25.76 21h:-25.50
+  low   both : 00h:-25.76 03h:-25.78 06h:-25.80 09h:-25.34 12h:-25.53 15h:-25.40 18h:-25.22 21h:-25.06

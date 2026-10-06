@@ -1,0 +1,12 @@
+Denetimler, 2026-10-06T07:31:08Z — indeks oznitelikleri, sakin sarmalayici, ACE olcumu sonrasi
+== ruff check src tests examples
+All checks passed!
+== mypy
+Success: no issues found in 30 source files
+== lint-imports
+
+Contracts: 1 kept, 0 broken.
+== pytest (proje ortami)
+79 passed, 1 skipped in 8.53s
+== pytest (Sidera ortami, Python 3.10)
+76 passed, 5 skipped in 5.68s

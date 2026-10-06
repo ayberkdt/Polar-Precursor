@@ -1,0 +1,13 @@
+OMNI 28 Eki 2003: IMF uydu kimligi {60.0: 1440} (60 = Geotail, 71 = ACE; OMNI belgesi)
+OMNI kendi zaman kaydirmasi [s]: {'min': -15.0, '50%': 116.0, 'max': 277.0}
+OMNI yay soku x [Re]: ortanca 12.65; OMNI uydu x [Re]: ortanca 30.46; ACE x [Re]: ortanca 231.5
+ACE SWEPAM vx gecerli orani (28 Eki): 0.51
+ACE -> yay soku balistik gecikme [s]: ortanca 2288, p10 1750, p90 2804 (n=691)
+   OMNI'nin Geotail kaydirmasi ile fark: ortanca 2157 s (beklenen: ACE 231 Re'de, Geotail ~30 Re'de)
+Kaydirilmis ACE Bz vs OMNI Bz (1 dk, 1369 ortak dakika): r = 0.728, RMS fark = 3.04 nT, OMNI Bz std = 4.12 nT
+Ek gecikme taramasi (-20..+20 dk): en iyi +7 dk, r = 0.752  (pozitif = balistik gecikme kisa kalmis)
+Ek gecikme uygulaninca RMS = 2.91 nT
+
+Yorum: OMNI o gun Geotail'den uretilmis; ACE'den balistik kaydirmayla elde edilen Bz, OMNI ile
+r~0.7 uyusuyor ve gecikme hatasi dakikalar mertebesinde. Faz cephesi yontemi uygulanmadi.
+Tek gun, tek olay; genel bir hata butcesi degil.

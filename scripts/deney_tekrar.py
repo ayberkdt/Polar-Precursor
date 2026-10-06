@@ -55,7 +55,9 @@ def main(argv: list[str]) -> int:
         if (source / name).exists():
             shutil.copy(source / name, out / name)
     manifest = build_manifest(
-        config, root=ROOT, data_files=[source / "design.parquet"],
+        config,
+        root=ROOT,
+        data_files=[source / "design.parquet"],
         extra={"rerun_of": str(source), "rows": int(len(design))},
     )
     write_manifest(out / "manifest.json", manifest)

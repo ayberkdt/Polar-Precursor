@@ -94,3 +94,18 @@ def test_add_reference_density_stride_interpolation_is_close(gfz_daily_path: Pat
     assert low["target_mean"].mean() > 0.0  # storm day: observed above reference
     with pytest.raises(ValueError):
         add_reference_density(track, model, stride=0)
+
+
+def test_missing_positions_are_bridged_by_interpolation(gfz_daily_path: Path):
+    provider = GfzIndexProvider.from_file(gfz_daily_path, geomagnetic="measured")
+    model = QuietNrlmsisReference(provider)
+    track = _track().iloc[:60].copy()
+    track.loc[track.index[10:13], ["latitude_deg", "longitude_deg", "altitude_m"]] = np.nan
+    out = add_reference_density(track, model, stride=1)
+    assert np.isfinite(out[REFERENCE_COLUMN]).all()
+    full = add_reference_density(_track().iloc[:60], model, stride=1)
+    delta = np.abs(np.log(out[REFERENCE_COLUMN]) - np.log(full[REFERENCE_COLUMN]))
+    assert delta.iloc[10:13].max() < 0.1 and delta.drop(delta.index[10:13]).max() < 1e-12
+    empty = track.copy()
+    empty[["latitude_deg", "longitude_deg", "altitude_m"]] = np.nan
+    assert add_reference_density(empty, model)[REFERENCE_COLUMN].isna().all()

@@ -136,20 +136,29 @@ def add_reference_density(
     if not isinstance(times, pd.DatetimeIndex) or times.tz is None:
         raise ValueError("track must be indexed by timezone-aware UTC times.")
     n = len(track)
+    latitude = track["latitude_deg"].to_numpy(dtype=np.float64)
+    longitude = track["longitude_deg"].to_numpy(dtype=np.float64)
+    altitude = track["altitude_m"].to_numpy(dtype=np.float64)
+    finite = np.isfinite(latitude) & np.isfinite(longitude) & np.isfinite(altitude)
     picks = np.arange(0, n, stride)
     if picks[-1] != n - 1:
         picks = np.append(picks, n - 1)
-    evaluated = model.density(
-        times[picks],
-        track["latitude_deg"].to_numpy(dtype=np.float64)[picks],
-        track["longitude_deg"].to_numpy(dtype=np.float64)[picks],
-        track["altitude_m"].to_numpy(dtype=np.float64)[picks],
-    )
-    naive = times.tz_convert("UTC").tz_localize(None).to_numpy()
-    seconds = (naive - naive[0]) / np.timedelta64(1, "s")
-    log_density = np.interp(seconds, seconds[picks], np.log(evaluated))
+    # Records with a missing position (fill values in the product) cannot be
+    # evaluated; the reference there is interpolated from the neighbouring
+    # nodes, and the observed density at such records is normally flagged
+    # invalid anyway. Measured 2026-10-06: a 2001-2015 coverage run hit this.
+    picks = picks[finite[picks]]
+    if picks.size == 0:
+        picks = np.where(finite)[0]
     out = track.copy()
-    out[column] = np.exp(log_density)
+    if picks.size == 0:
+        out[column] = np.nan
+    else:
+        evaluated = model.density(times[picks], latitude[picks], longitude[picks], altitude[picks])
+        naive = times.tz_convert("UTC").tz_localize(None).to_numpy()
+        seconds = (naive - naive[0]) / np.timedelta64(1, "s")
+        log_density = np.interp(seconds, seconds[picks], np.log(evaluated))
+        out[column] = np.exp(log_density)
     out.attrs = dict(track.attrs)
     out.attrs["reference_model"] = model.label
     out.attrs["reference_stride"] = stride

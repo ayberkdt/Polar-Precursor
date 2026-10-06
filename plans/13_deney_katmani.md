@@ -74,16 +74,22 @@ Sonuç PASS: yanlış pozitif %0 ≤ %5; geri bulma %100 ≥ %80; ortalama kazan
 
 **Permütasyon testi sentetik kanıtı (`kanit/permutasyon_sentetik_kaniti_cikti_2026-10-06.txt`, 30 × 40, 200 permütasyon, 3 tohum):** sıfır durumunda gözlenen −0,17..−0,36 %, sıfır dağılımı ortalaması −0,16..−0,52 % (SD ≈ 0,2 %), p = 0,14 / 0,20 / 0,56; γ = 0,3'te gözlenen +8,7..+9,6 %, p = 0,005 (200 permütasyonla alınabilecek en küçük değer). Sıfır dağılımının ortalaması eksi: permütasyon, iç içe model cezasını sıfır dağılımına taşıyor ve karşılaştırmayı adil kılıyor. Koşu başına 23-36 s.
 
+## Gerçek veri hattı (6 Eki 2026 öğleden sonra)
+
+**Referans yoğunluk** (`space_environment/analysis/reference_density.py`): `QuietNrlmsisReference` pymsis 0.13'ü vektörel çağırır; F10.7 (önceki gün) ve 81 günlük ortalama `GfzIndexProvider`'dan, yedi Ap yuvasının hepsi 4 (`geomagnetic_activity=-1`); `f107s/f107as/aps` her zaman verildiği için pymsis ağa çıkmaz (belgesi okundu). Testte doğrulandı: yuvaların hepsi 4 iken fırtına kipi ile günlük kip birebir aynı (plan 03'ün bulgusu, rtol 1e-6). `add_reference_density(track, model, stride=)` düğümlerde değerlendirip `ln ρ` için doğrusal içdeğerler. Ölçülen hata (60 s CHAMP izi, 29 Eki 2003): düğüm aralığı 2 dk → en büyük |Δ ln ρ| 0,006; 3 dk → 0,012; 6 dk → 0,051; 10 dk → 0,13 (yaklaşık karesel). 10 s üründe adım 6 (60 s düğüm) → **0,0015** (`kanit/uctan_uca_2003_10_29_cikti.txt`); önerilen ayar bu. Sidera köprüsünden tek tek örnekle giden `integration.sidera.SideraReferenceModel` çapraz kontrol için yazıldı (Sidera ortamında koşulmadı).
+
+**Uçtan uca koşu** (`kanit/uctan_uca_2003_10_29.py`, çıktı `_cikti.txt`, `results/uctan_uca_20031029_20261006/`): CDF 8640 kayıt → QD/MLT → referans (adım 6) → 125 parça (31 alçak, 16+16 kutup, 31+31 orta; hepsi tam) → 138 örnek → Richardson-Cane + OMNI kesiti ile fırtına tablosu (28 Eki −58 nT orta ve 29 Eki −391 nT aşırı, **aynı küme 11**) → `CombinedDrivers` → **138 satır × 120 sütun** tasarım matrisi; parquet ve `manifest.json` (commit, yapılandırma özeti, 7 veri dosyasının SHA-256'sı). Toplam 8 s. Ölçülen: hedef `ln ρ/ρ_ref` 3 saatlik ortalamaları 00h −0,11 → 06h +0,13 → 21h +0,63 (fırtına tepkisi görünür); hedef ortalama +0,23, SD 0,28; sürücü ailesinde NaN oranı %35 (Halloween L1 boşluğu, `02`), `solar_wind_available` bayrağı tüm satırlarda 1 (OMNI çerçevesi var, değerler boş); kalıcılık NaN %5; kutup ailesi NaN %13 (gün başı). Tek fırtına olduğundan ÇD koşulmadı.
+
 ## Test ve kapı durumu (6 Eki 2026)
 
-`kanit/space_environment_testler_2026-10-06f.txt`: ruff temiz, mypy 53 dosya temiz, 3 import sözleşmesi KEPT, **111 geçti, 1 atlandı**. Yeni test dosyaları: `test_pp_design_and_models.py` (yapılandırma, merdiven, gerçek CHAMP gününde tasarım matrisi ve nedensellik, ridge), `test_pp_validation_and_statistics.py` (katlar, tampon, iç içe ÇD, tablolar, bootstrap, permütasyon, güç), `test_pp_experiment.py` (uçtan uca, küçük iskelet, manifest).
+`kanit/space_environment_testler_2026-10-06g.txt`: ruff temiz, mypy 55 dosya temiz, 3 import sözleşmesi KEPT, **114 geçti, 1 atlandı** (öğle kaydı `06f`: 111). Yeni test dosyaları: `test_pp_design_and_models.py` (yapılandırma, merdiven, gerçek CHAMP gününde tasarım matrisi ve nedensellik, ridge), `test_pp_validation_and_statistics.py` (katlar, tampon, iç içe ÇD, tablolar, bootstrap, permütasyon, güç), `test_pp_experiment.py` (uçtan uca, küçük iskelet, manifest).
 
 ## Kalanlar
 
 | # | İş | Bağlı olduğu |
 | --- | --- | --- |
-| 1 | Gerçek veri hattı: iz → referans yoğunluk sütunu (NRLMSIS ap = 4, Sidera köprüsü) → `segment_track(..., reference=)` → `build_samples` → `build_design` | `11` madde 7 |
-| 2 | Sürücü işlevi: `DriverFeatureBuilder.features_at` + `IndexFeatureBuilder.features_at` birleşimi `build_design(drivers=)` için tek çağrı | `06` |
+| 1 | ~~Gerçek veri hattı~~ 6 Eki öğleden sonra yazıldı ve 29 Eki 2003 CHAMP gününde uçtan uca koşuldu (aşağıda) | — |
+| 2 | ~~Sürücü işlevi~~ `design/drivers.py` `CombinedDrivers` (OMNI + GFZ + Hp30 + Dst; L1 boşluğunda NaN + `solar_wind_available` bayrağı) | — |
 | 3 | Pilot koşusu: 30 fırtına, CHAMP 2001-05..2005-12; önce CHAMP 2001-2005 indirme (onay) | `07`, `01` |
 | 4 | Ön kayıt belgesi → `configs/pilot.toml` güncellemesi, 9. madde pilottan sonra | `07` |
 | 5 | Gradient boosting basamağı (ana plan "Model sınıfı" 2); bugün yalnız ridge | — |

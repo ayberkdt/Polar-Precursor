@@ -1,0 +1,28 @@
+# Kapılar, 6 Eki 2026 öğleden sonra (referans yoğunluk, CombinedDrivers, uçtan uca betik sonrası)
+# komutlar: ruff check src tests examples; python -m mypy; lint-imports; pytest tests -q
+## ruff
+All checks passed!
+## mypy
+Success: no issues found in 55 source files
+## lint-imports
+=============
+Import Linter
+=============
+
+
+---------
+Contracts
+---------
+
+Analyzed 55 files, 69 dependencies.
+-----------------------------------
+
+space_environment does not depend on the thesis package KEPT
+polar_precursor packages form one layer stack KEPT
+space_environment packages form one layer stack KEPT
+
+Contracts: 3 kept, 0 broken.
+## pytest
+........................................................................ [ 63%]
+..........................................                               [100%]
+114 passed, 1 skipped in 23.03s

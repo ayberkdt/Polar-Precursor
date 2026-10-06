@@ -18,6 +18,9 @@ paketini tutar.
   fırtına gruplu iç içe çapraz doğrulama, küme bootstrap, tabakalı permütasyon,
   güç; sentetik iskelet testi plan 07'deki iki ölçütle koşuldu
   (`plans/kanit/iskelet_testi_cikti_2026-10-06.txt`).
+- Gerçek veri hattı uçtan uca çalışıyor: CDF → QD → sakin NRLMSIS referansı →
+  parçalar → örnekler → fırtına tablosu → tasarım matrisi ve koşu kaydı, 29 Ekim
+  2003 gününde ölçüldü (`plans/kanit/uctan_uca_2003_10_29_cikti.txt`).
 - Henüz yok: 2001-2015 tam veri koşusu, gerçek veride pilot, ön kayıt belgesi,
   tez metni. Durum ve kararlar: [`plans/00_genel_bakis.md`](plans/00_genel_bakis.md).
 
@@ -72,14 +75,15 @@ Ayrıntı ve ölçülen iskelet sonuçları: [`plans/13_deney_katmani.md`](plans
 Python 3.10-3.12. Ortam `uv.lock` ile sabittir:
 
 ```bash
-uv sync --locked --extra dev --extra catalog --extra density --extra heating
+uv sync --locked --extra dev --extra catalog --extra density --extra heating --extra reference
 ```
 
 `pip` ile de kurulur (`pip install -e ".[dev,catalog,density,heating]"`).
 
 İsteğe bağlı ekler: `catalog` (openpyxl, Richardson-Cane xlsx), `density`
-(cdflib, ESA CDF), `heating` (h5py, Zenodo arşivi), `magnetic` (apexpy; Windows'ta
-kaynak derleme, tarif `plans/04`). Çekirdek yalnız numpy ve pandas ister.
+(cdflib, ESA CDF), `heating` (h5py, Zenodo arşivi), `reference` (pymsis, sakin
+NRLMSIS referansı), `magnetic` (apexpy; Windows'ta kaynak derleme, tarif
+`plans/04`). Çekirdek yalnız numpy ve pandas ister.
 
 ## Denetimler
 
@@ -93,7 +97,7 @@ kaynak derleme, tarif `plans/04`). Çekirdek yalnız numpy ve pandas ister.
 Büyük ham dosyalara bağlı testler `requires_data` işaretlidir ve dosya yoksa
 atlanır; Sidera köprüsü testleri Sidera kurulu değilse atlanır. Aynı dört kapı
 `.github/workflows/ci.yml` ile her push'ta koşar. Son yerel koşu:
-`plans/kanit/space_environment_testler_2026-10-06f.txt`.
+`plans/kanit/space_environment_testler_2026-10-06g.txt`.
 
 Sentetik iskelet testi (plan 07; gerçek veride birincil test bundan önce koşulmaz):
 

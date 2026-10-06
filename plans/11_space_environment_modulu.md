@@ -149,7 +149,7 @@ Sidera'nın `CLAUDE.md` dosyası ve `space_weather.py` modülü okunarak:
 | 4 | Başlangıç kuralının bağımsız doğrulaması (10 rastgele zayıf/orta fırtına, elle) | Beş olay ayar; doğrulama değil |
 | 5 | Şok adaylarının R&C dışı olanlarına elle bakmak; CfA şok listesiyle karşılaştırma | Yanlış pozitif oranı bilinmiyor |
 | 6 | DTCFILE birimi için birincil belge; saat eşlemesi pyatmos ile çapraz kontrol edildi (`02`) | Birim (K) hâlâ ikincil |
-| 7 | ~~Bant bölütleme~~ 6 Eki gece: `analysis/passes.py` yazıldı (`04`). Kalan: referans yoğunluk sütunu (NRLMSIS ap=4) izin üstüne eklenmesi; Sidera köprüsüyle yapılabilir. Deney katmanı (merdiven, ÇD, istatistik) 6 Eki öğle `polar_precursor` paketine yazıldı (`13`); bu modülün sınırı burada kalır | Tez hattının ilk uçtan uca koşusu |
+| 7 | ~~Bant bölütleme~~ 6 Eki gece: `analysis/passes.py` yazıldı (`04`). Referans yoğunluk sütunu 6 Eki öğleden sonra `analysis/reference_density.py` ile yazıldı (pymsis, `reference` extra; adım 6 hatası 0,0015, `13`). Deney katmanı (merdiven, ÇD, istatistik) 6 Eki öğle `polar_precursor` paketine yazıldı (`13`); bu modülün sınırı burada kalır | Tez hattının ilk uçtan uca koşusu |
 | 9 | JB2008 adaptörü: pyatmos kernel'i (`JB2008_subfunc.JB2008`, numba) girdilerimizle çağrılabilir; paket içe aktarması IERS indiriyor | Çevrimdışı kip ya da kernel'i ayırma kararı |
 | 8 | R&C ek harflerinin anlamı (katalog web sayfası) | `*_note` alanları yorumlanmıyor |
 

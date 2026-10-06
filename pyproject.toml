@@ -15,6 +15,7 @@ catalog = ["openpyxl>=3.1"]   # Richardson-Cane xlsx
 density = ["cdflib>=1.3"]     # ESA/TU Delft CDF density product
 heating = ["h5py>=3.10"]      # Weimer et al. 2023 HDF5 archive
 magnetic = ["apexpy>=2.1"]    # quasi-dipole coordinates (source build on Windows, see plans/04)
+reference = ["pymsis>=0.11"]  # quiet NRLMSIS reference density along tracks (no network: indices are passed)
 
 [tool.setuptools.packages.find]
 where = ["src"]

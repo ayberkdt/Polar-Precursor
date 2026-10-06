@@ -12,6 +12,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+import numpy as np
+import pandas as pd
+
 from space_environment.physics.space_weather import GfzIndexProvider
 
 
@@ -43,4 +46,52 @@ class SideraSpaceWeatherAdapter:
         )
 
 
-__all__ = ["SideraSpaceWeatherAdapter"]
+@dataclass(frozen=True, slots=True)
+class SideraReferenceModel:
+    """Quiet NRLMSIS reference through Sidera's adapter, one sample at a time.
+
+    Implements ``analysis.reference_density.ReferenceModel`` so it can be
+    passed to ``add_reference_density``; it is the slow cross-check of the
+    vectorised ``QuietNrlmsisReference`` (same model, same indices).
+    """
+
+    provider: GfzIndexProvider
+    version: str = "2.1"
+
+    @property
+    def label(self) -> str:
+        return f"NRLMSIS {self.version} via Sidera NrlmsiseAtmosphere, {self.provider.geomagnetic}"
+
+    def density(
+        self,
+        times: pd.DatetimeIndex,
+        latitude_deg: np.ndarray,
+        longitude_deg: np.ndarray,
+        altitude_m: np.ndarray,
+    ) -> np.ndarray:
+        try:
+            from sidera.frames.geodesy import WGS84, GeodeticPosition
+            from sidera.physics.atmosphere.models import AtmosphereSample, NrlmsiseAtmosphere
+        except ImportError as exc:  # pragma: no cover - exercised by the skip path
+            raise ImportError("SideraReferenceModel needs the 'sidera' package.") from exc
+        model = NrlmsiseAtmosphere(
+            space_weather=SideraSpaceWeatherAdapter(self.provider),
+            version=self.version,
+            storm_mode=True,
+        )
+        out = np.empty(len(times))
+        for i, moment in enumerate(times):
+            position = GeodeticPosition(
+                latitude_deg=float(latitude_deg[i]),
+                longitude_deg=float(longitude_deg[i]),
+                altitude_m=float(altitude_m[i]),
+                ellipsoid=WGS84,
+            )
+            sample = AtmosphereSample(
+                geodetic=position, epoch_tdb_s=0.0, utc=moment.to_pydatetime()
+            )
+            out[i] = model.evaluate(sample).density_kg_m3
+        return out
+
+
+__all__ = ["SideraReferenceModel", "SideraSpaceWeatherAdapter"]

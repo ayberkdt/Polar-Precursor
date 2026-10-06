@@ -1,0 +1,31 @@
+yapilandirma: pilot c97064b20414
+  [   0.5 s] CDF okundu: 8640 kayit, CH_OPER_DNS_ACC_2__20031029T000000_20031029T235959_0001.cdf | sha256=3521fa6d5e026f85a78f1533eb7ecfcee4b72928a5347ee83cd1e223aa822c6a
+  [   0.3 s] QD enlem ve MLT eklendi
+  [   1.5 s] referans, adim 1 (her 10 s)
+  [   0.1 s] referans, adim 6 (60 s dugum)
+  10 s urunde adim 6 hatasi: en buyuk |delta ln rho| 0.00152, p99 0.00121, ortanca 0.000278
+  ln(rho/rho_ref) 3 saatlik ortalamalar: 00h:-0.11 03h:-0.18 06h:+0.13 09h:+0.24 12h:+0.32 15h:+0.32 18h:+0.41 21h:+0.63
+  [   0.1 s] parcalar: 125 ({('low', 'both'): 31, ('mid', 'north'): 31, ('mid', 'south'): 31, ('polar', 'north'): 16, ('polar', 'south'): 16}); tam: 125
+  [   0.1 s] ornekler: 138 (kutup gecisi, hedef) cifti; sizinti denetimi gecti
+  [   2.3 s] firtina tablosu (OMNI kesiti 28-30 Eki): 2 satir
+             disturbance_utc            window_end_utc  min_symh_nt intensity  cluster
+18 2003-10-28 02:06:00+00:00 2003-10-29 06:11:00+00:00        -58.0  moderate       11
+19 2003-10-29 06:11:00+00:00 2003-10-30 16:19:00+00:00       -391.0   extreme       11
+  [   1.9 s] tasarim matrisi: 138 satir x 120 sutun
+  gruplar: {11: 138} | siniflar: ['moderate', 'extreme']
+  ongoru kutulari: {'105-150': 29, '150-195': 28, '195-240': 27, '240-270': 26, '60-105': 28}
+  aile low   :   4 sutun, NaN orani   9.1%
+  aile polar :   8 sutun, NaN orani  12.7%
+  aile mid   :   1 sutun, NaN orani   3.6%
+  aile drv   :  46 sutun, NaN orani  34.7%
+  aile oracle:  46 sutun, NaN orani  35.3%
+  aile geo   :   6 sutun, NaN orani   0.0%
+  hedef: ortalama +0.226, SD 0.281; persistence NaN 5%; solar_wind_available=1 orani 100%
+                     t0_utc  lead_time_min  target_value  persistence  low_lag1  polar_north_lag1  polar_south_lag1  mid_same  drv_em_mv_m  drv_dst_latest_hour_nt
+0 2003-10-29 00:08:00+00:00      63.416667     -0.121525          NaN       NaN               NaN         -0.079669       NaN     4.751481                   -20.0
+1 2003-10-29 00:08:00+00:00     112.500000     -0.060766          NaN       NaN               NaN         -0.079669       NaN     4.751481                   -20.0
+2 2003-10-29 00:08:00+00:00     155.083333     -0.093721          NaN       NaN               NaN         -0.079669       NaN     4.751481                   -20.0
+3 2003-10-29 00:08:00+00:00     202.833333     -0.000260          NaN       NaN               NaN         -0.079669       NaN     4.751481                   -20.0
+4 2003-10-29 00:08:00+00:00     247.333333     -0.121627          NaN       NaN               NaN         -0.079669       NaN     4.751481                   -20.0
+5 2003-10-29 00:55:10+00:00      65.333333     -0.060766    -0.116105 -0.116105          0.125426         -0.079669 -0.113387     2.306545                   -20.0
+  [   0.8 s] yazildi: results\uctan_uca_20031029_20261006 (design.parquet, segments.parquet, manifest.json); commit 3b691cca25c64751e1590a112080596b172a409c+dirty

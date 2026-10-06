@@ -44,7 +44,9 @@ Hazırlanma: 6 Ekim 2026, pilot sonrası (`14`). Kaynak: `07` "Ön kayıt belges
 
 ## D. Veri ve kapsam (sabit)
 
-CHAMP 2001-05 … 2010-09 ve GRACE-A 2002 … 2015 fırtına pencereleri (ESA/TU Delft V2, `01`); OMNI HRO 1 dk 2001-2015; GFZ günlük + Hp30; Kyoto Dst saatlik. Kapsam raporu (fırtına başına gün bulunan/gereken, geçerli oran) ana analizden önce yazılır; uydu kapsamı < %70 olan fırtına kümesi havuzdan düşer (öneri; eşiği sen seç).
+CHAMP 2001-05 … 2010-09 ve GRACE-A 2002 … 2015 fırtına pencereleri (ESA/TU Delft V2, `01`); OMNI HRO 1 dk 2001-2015; GFZ günlük + Hp30 (F10.7 patlama taraması açık, `02`); Kyoto Dst saatlik.
+
+**Kapsam raporu (6 Eki 2026 gece, `kanit/kapsam_raporu_2026-10-06.md`, sürücüsüz tasarım):** katalog 2001-2015'te **197 benzersiz küme** (zayıf 72 örnekli, orta 60, güçlü 28, şiddetli 14, aşırı 6). **Birincil havuz (küme sınıfı ≥ orta): katalogda 119, en az bir uyduda örnekli 110, iki uyduda birden 44**; blok başına 53 (2001-2005) / 10 (2006-2010) / 47 (2011-2015). CHAMP 110 kümeden 104'ü örnekli (57 434 satır), GRACE-A 197'den 160'ı (80 264 satır); örneksiz 43 (uydu × küme) çifti dosyası olmayan günler. Öneri: **G = 110** birincil havuz; uydu × küme kapsamı < %70 olan çiftler düşer (47 çift; eşiği sen seç), küme en az bir uyduda kalır. Ana planın 127 kestirimine yakın; 110 fırtına 0,27 SD'yi saptar, pilot etkisi 0,68 SD.
 
 ## E. Analiz hattı (sabit, kod sürümüyle)
 

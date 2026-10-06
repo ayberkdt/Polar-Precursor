@@ -85,7 +85,7 @@ Ana plan tablosu: M, B3'ü %3 eşiğinin üstünde geçiyor; B3t'yi anlamlı ama
 Senin kararın gereken:
 
 1. **Ön kayıt belgesi**: plan 07'deki 11 karar + iskelet bulgusu (bootstrap muhafazakâr) + kapı okuması. Sonra `configs/pilot.toml` güncellenir.
-2. ~~2. kademe veri~~ indi ve doğrulandı (6 Ekim akşam). Sırada: tüm fırtınalar için kapsam raporu (ön kayıt bölüm D), uydu kapsam eşiği kararı.
+2. ~~2. kademe veri~~ indi ve doğrulandı; ~~kapsam raporu~~ çıktı: birincil havuz (orta ve üstü) 110 fırtına kümesi örnekli, 138 bin örnek (`plans/kanit/kapsam_raporu_2026-10-06.md`). Kararın: uydu kapsam eşiği (%70 önerisi).
 3. Lisans ve GitHub açıklaması.
 
 Kod tarafında kalan: B3t ikinci tanımı, Liu-2010 taban puanı, gradient boosting basamağı, epok duyarlılığı (±30 dk), sürücüsüz örnekler ikincil analizi, Sidera ortamında referans çapraz kontrolü.

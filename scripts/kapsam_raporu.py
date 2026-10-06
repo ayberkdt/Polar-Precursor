@@ -20,14 +20,13 @@ from pathlib import Path
 
 import pandas as pd
 
+from polar_precursor.config import load_config
+from polar_precursor.design.matrix import cluster_classes
+from polar_precursor.experiment.dataset import build_dataset
 from space_environment.analysis.catalog import build_storm_catalog, read_richardson_cane
 from space_environment.analysis.reference_density import QuietNrlmsisReference
 from space_environment.io.omni import read_omni_hro
 from space_environment.physics.space_weather import GfzIndexProvider
-
-from polar_precursor.config import load_config
-from polar_precursor.design.matrix import cluster_classes
-from polar_precursor.experiment.dataset import build_dataset
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data/raw"
@@ -125,7 +124,8 @@ def main() -> int:
         lines.append(
             f"| {satellite} | **hepsi** | {len(per_cluster)} | "
             f"{int((per_cluster['design_rows'] > 0).sum())} | "
-            f"{per_cluster['day_fraction'].median():.2f} | {int(per_cluster['design_rows'].sum())} |"
+            f"{per_cluster['day_fraction'].median():.2f} | "
+            f"{int(per_cluster['design_rows'].sum())} |"
         )
     lines.append("")
     lines.append(

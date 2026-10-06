@@ -26,6 +26,12 @@ polar_precursor/
   experiment/pipeline.py  run_experiment: tampon → merdiven → ÇD → tablolar → bootstrap → permütasyon
   experiment/skeleton.py  Plan 07 iskelet testi (python -m polar_precursor.experiment.skeleton)
   experiment/manifest.py  Koşu kaydı: commit (+dirty), yapılandırma özeti, sürümler, veri SHA-256
+  statistics/secondary.py İkincil karşılaştırmalar (H4, kontroller, merdiven adımları), öngörü kutusu
+                          başına bootstrap + Holm, H2 betimi, sınıf başına d_s dağılımı
+  experiment/report.py    Kapı raporu (Markdown): plan 07 "Kapı raporuna eklenecekler" tabloları
+  experiment/dataset.py   Fırtına penceresi başına veri seti: günlük CDF'ler → iz → QD → referans →
+                          parçalar → örnekler → tasarım; parquet önbellek; kapsam tablosu
+  design/drivers.py       CombinedDrivers: OMNI + GFZ + Hp30 + Dst tek çağrıda, L1 boşluğunda NaN + bayrak
 ```
 
 Katman sözleşmesi (`pyproject.toml`, `lint-imports` KEPT): `experiment → statistics → validation → models | metrics | synthetic → design → config`.
@@ -80,9 +86,19 @@ Sonuç PASS: yanlış pozitif %0 ≤ %5; geri bulma %100 ≥ %80; ortalama kazan
 
 **Uçtan uca koşu** (`kanit/uctan_uca_2003_10_29.py`, çıktı `_cikti.txt`, `results/uctan_uca_20031029_20261006/`): CDF 8640 kayıt → QD/MLT → referans (adım 6) → 125 parça (31 alçak, 16+16 kutup, 31+31 orta; hepsi tam) → 138 örnek → Richardson-Cane + OMNI kesiti ile fırtına tablosu (28 Eki −58 nT orta ve 29 Eki −391 nT aşırı, **aynı küme 11**) → `CombinedDrivers` → **138 satır × 120 sütun** tasarım matrisi; parquet ve `manifest.json` (commit, yapılandırma özeti, 7 veri dosyasının SHA-256'sı). Toplam 8 s. Ölçülen: hedef `ln ρ/ρ_ref` 3 saatlik ortalamaları 00h −0,11 → 06h +0,13 → 21h +0,63 (fırtına tepkisi görünür); hedef ortalama +0,23, SD 0,28; sürücü ailesinde NaN oranı %35 (Halloween L1 boşluğu, `02`), `solar_wind_available` bayrağı tüm satırlarda 1 (OMNI çerçevesi var, değerler boş); kalıcılık NaN %5; kutup ailesi NaN %13 (gün başı). Tek fırtına olduğundan ÇD koşulmadı.
 
+## İkincil analizler ve kapı raporu (6 Eki 2026 akşam)
+
+`statistics/secondary.py`: `comparison_table` aynı küme bootstrap'ini altı çifte uygular (B3→M birincil; D→B3 H4; B3t→M ve B3k→M kontroller; B1→B2, B2→B3 merdiven); tek yönlü bootstrap p değeri = adayın referansı geçmediği yeniden örnekleme oranı (`BootstrapResult.p_one_sided`). `lead_bin_tests` birincil karşılaştırmayı öngörü kutusu başına yapar ve `holm_adjust` ile düzeltir (ana plan "Çoklu test"); `h2_gain_peaks_mid_lead` H2'yi betimsel olarak işaretler; `loss_difference_by_class` sınıf başına d_s dağılımını verir. `experiment/report.py` `gate_report` bunları plan 07'nin kapı listesine göre Markdown'a döker; d_s'nin ölçülen SD'si ile güç tablosunu da ekler (madde 9 için girdi). Testler sentetik veride (`tests/test_pp_secondary_report.py`).
+
+Eksik olan: B3t'nin iki tanımıyla sonuç (bugün tek tanım: aynı geçişin orta enlem ortalaması), Liu-2010 taban puanı, kısmi korelasyon; `07` kapı listesinde kalıyor.
+
+## Fırtına penceresi veri seti kurucu (6 Eki 2026 akşam)
+
+`experiment/dataset.py`: her katalog satırı için `[rahatsızlık − 6 sa, pencere sonu]` aralığını kapsayan günlük CDF'ler bulunur (`daily_file`, sürüm eki en yüksek olan; GRACE adları plan 01'den, diskte doğrulanmadı), tek iz olarak birleştirilir, QD (apexpy varsa; yoksa coğrafi, kapsam satırında yazar), referans (adım 6), parçalar, örnekler, tasarım; yalnız t0'ı fırtına penceresinde olan satırlar kalır (`group == küme`). Fırtına başına parquet önbelleği (anahtar: yapılandırma özeti + uydu + satır + adım). `build_dataset` tüm fırtınaları birleştirir ve **kapsam tablosu** üretir (gün gereken/bulunan, kayıt, geçerli oran, parça, örnek, satır). 29 Eki 2003 gününde test: 2 gün gerekli 1 bulundu, 8640 kayıt, 98 tasarım satırı; önbellekten ikinci okuma birebir aynı (`tests/test_pp_dataset.py`, `requires_data`).
+
 ## Test ve kapı durumu (6 Eki 2026)
 
-`kanit/space_environment_testler_2026-10-06g.txt`: ruff temiz, mypy 55 dosya temiz, 3 import sözleşmesi KEPT, **114 geçti, 1 atlandı** (öğle kaydı `06f`: 111). Yeni test dosyaları: `test_pp_design_and_models.py` (yapılandırma, merdiven, gerçek CHAMP gününde tasarım matrisi ve nedensellik, ridge), `test_pp_validation_and_statistics.py` (katlar, tampon, iç içe ÇD, tablolar, bootstrap, permütasyon, güç), `test_pp_experiment.py` (uçtan uca, küçük iskelet, manifest).
+`kanit/space_environment_testler_2026-10-06h.txt`: ruff temiz, mypy 58 dosya temiz, 3 import sözleşmesi KEPT, **120 geçti, 1 atlandı** (önceki kayıtlar `06f`: 111, `06g`: 114). Yeni test dosyaları: `test_pp_design_and_models.py` (yapılandırma, merdiven, gerçek CHAMP gününde tasarım matrisi ve nedensellik, ridge), `test_pp_validation_and_statistics.py` (katlar, tampon, iç içe ÇD, tablolar, bootstrap, permütasyon, güç), `test_pp_experiment.py` (uçtan uca, küçük iskelet, manifest).
 
 ## Kalanlar
 
@@ -92,6 +108,7 @@ Sonuç PASS: yanlış pozitif %0 ≤ %5; geri bulma %100 ≥ %80; ortalama kazan
 | 2 | ~~Sürücü işlevi~~ `design/drivers.py` `CombinedDrivers` (OMNI + GFZ + Hp30 + Dst; L1 boşluğunda NaN + `solar_wind_available` bayrağı) | — |
 | 3 | Pilot koşusu: 30 fırtına, CHAMP 2001-05..2005-12; önce CHAMP 2001-2005 indirme (onay) | `07`, `01` |
 | 4 | Ön kayıt belgesi → `configs/pilot.toml` güncellemesi, 9. madde pilottan sonra | `07` |
+| 3b | Pilot koşusu artık tek komutluk: `build_dataset` → `run_experiment` → `gate_report`; eksik olan veri | `01` |
 | 5 | Gradient boosting basamağı (ana plan "Model sınıfı" 2); bugün yalnız ridge | — |
 | 6 | Diebold-Mariano / Clark-West ikincil testleri; koşullu karşılıklı bilgi eki (isteğe bağlı) | — |
 | 7 | Permütasyonda alfa yeniden ayarı (bugün sabit); maliyet 5× | — |

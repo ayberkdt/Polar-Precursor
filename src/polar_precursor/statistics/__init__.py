@@ -17,9 +17,29 @@ from polar_precursor.statistics.power import (
     power_table,
     required_storms,
 )
+from polar_precursor.statistics.secondary import (
+    PAIRS_SECONDARY,
+    PairResult,
+    compare_pair,
+    comparison_table,
+    h2_gain_peaks_mid_lead,
+    holm_adjust,
+    lead_bin_tests,
+    loss_difference_by_class,
+    per_storm_losses_by,
+)
 
 __all__ = [
+    "PAIRS_SECONDARY",
     "POWER_FACTOR",
+    "PairResult",
+    "compare_pair",
+    "comparison_table",
+    "h2_gain_peaks_mid_lead",
+    "holm_adjust",
+    "lead_bin_tests",
+    "loss_difference_by_class",
+    "per_storm_losses_by",
     "BootstrapResult",
     "PermutationResult",
     "cluster_bootstrap",

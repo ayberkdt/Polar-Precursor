@@ -65,8 +65,8 @@ Sidera entegrasyonu: [`plans/12_sidera_entegrasyon_tasarimi.md`](plans/12_sidera
 | `design` | Sütun sözleşmesi, merdiven B0 B1 B2 D B3 B3k B3t M, tasarım matrisi kurucu |
 | `models`, `metrics` | Kapalı biçim ridge; artık, RMSE, korelasyon, beceri, fırtına başına kayıp, tepe hataları |
 | `validation` | Fırtına gruplu, epok sıralı katlar; 57 saat tampon denetimi; iç içe çapraz doğrulama |
-| `statistics` | Küme bootstrap (d_s, göreli RMSE azalması), tabakalı permütasyon, güç |
-| `synthetic`, `experiment` | Bilinen kutup katkılı sentetik fırtınalar; uçtan uca koşu, iskelet testi, koşu kaydı |
+| `statistics` | Küme bootstrap (d_s, göreli RMSE azalması), tabakalı permütasyon, güç; ikincil karşılaştırmalar ve öngörü kutusu başına Holm |
+| `synthetic`, `experiment` | Bilinen kutup katkılı sentetik fırtınalar; uçtan uca koşu, iskelet testi, koşu kaydı, fırtına penceresi veri seti kurucu, kapı raporu |
 
 Ayrıntı ve ölçülen iskelet sonuçları: [`plans/13_deney_katmani.md`](plans/13_deney_katmani.md).
 
@@ -97,7 +97,7 @@ NRLMSIS referansı), `magnetic` (apexpy; Windows'ta kaynak derleme, tarif
 Büyük ham dosyalara bağlı testler `requires_data` işaretlidir ve dosya yoksa
 atlanır; Sidera köprüsü testleri Sidera kurulu değilse atlanır. Aynı dört kapı
 `.github/workflows/ci.yml` ile her push'ta koşar. Son yerel koşu:
-`plans/kanit/space_environment_testler_2026-10-06g.txt`.
+`plans/kanit/space_environment_testler_2026-10-06h.txt`.
 
 Sentetik iskelet testi (plan 07; gerçek veride birincil test bundan önce koşulmaz):
 

@@ -31,6 +31,7 @@ class BootstrapResult:
     loss_difference_ci_low: float
     loss_difference_ci_high: float
     fraction_storms_improved: float
+    p_one_sided: float  # fraction of resamples where the candidate does not beat the reference
 
     @property
     def excludes_zero(self) -> bool:
@@ -43,7 +44,8 @@ class BootstrapResult:
             f"{100 * self.relative_rmse_reduction:+.2f}% "
             f"[{100 * self.ci_low:+.2f}%, {100 * self.ci_high:+.2f}%] ({pct:.0f}% cluster "
             f"bootstrap, {self.n_resamples} resamples, seed {self.seed}, G = {self.n_storms}); "
-            f"storms improved {100 * self.fraction_storms_improved:.0f}%"
+            f"storms improved {100 * self.fraction_storms_improved:.0f}%, bootstrap p "
+            f"{self.p_one_sided:.4f}"
         )
 
 
@@ -122,6 +124,7 @@ def cluster_bootstrap(
         loss_difference_ci_low=float(d_lo),
         loss_difference_ci_high=float(d_hi),
         fraction_storms_improved=float(np.mean(d > 0.0)),
+        p_one_sided=float((1 + int(np.sum(~(reduction_b > 0.0)))) / (n_resamples + 1)),
     )
 
 
